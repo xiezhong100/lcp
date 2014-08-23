@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>lcp-parent</artifactId>
+		<groupId>lycy.app.lcp</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../lcp-parent/pom.xml</relativePath>
+	</parent>
+	<groupId>lycy.app.lcp</groupId>
+	<artifactId>lcp-search-web</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>lcp-search-web Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>org.wltea.analyzer</groupId>
+			<artifactId>IKAnalyzer</artifactId>
+			<version>2012</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>lycy.app.lcp</groupId>
+			<artifactId>lcp-search-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>lcp-search-web</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<!-- 你要部署的ip地址，参考上面 -->
+					<url>http://192.168.1.5:8080/manager/text</url>
+					<username>admin</username>
+					<password>password_123</password>
+					<!-- 你要部署的路径，比如 /lcp-show-web -->
+					<path>/lcp-search-web</path>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

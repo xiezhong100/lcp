@@ -1,0 +1,293 @@
+		var j=-1;
+		var temp_str;
+		var preTypeWord = "";  //记录前一次的输入
+		var typeWord = ""; 
+		var resultLen = 0;   //记录前一次查询的结果
+		
+		function searchProduct() {
+			$("#myend").html("");
+			$("#related").parent().siblings().removeClass("curr up down");
+			if(!$("#related").parent().hasClass('curr')) {
+				$("#related").parent().addClass("curr");
+			}
+			var keyword = $('#key').val();
+			var xmlRequest = $.ajax({
+				url : "searchAllProduct.do",
+				type : "POST",
+				data : {
+					"keyword" : keyword
+				},
+				dataType : "json",
+			});
+			xmlRequest.done(function(msg) {
+				var list = "<ul class='list-h clearfix'>";
+				var totalNum = msg.totalNum;
+				var totalPage = msg.totalPage;
+				var currPage = msg.currPage;
+				var products = msg.products;
+				resultLen =msg.products.length;
+				var pageView = "";
+				var prePageView = "";
+				var nextPageView = "";
+				if(currPage <= 1) {
+					prePageView = "<span class='prev-disabled'> 上页 <b></b></span>";
+				}else {
+					prePageView = "<span class='pre' href='#p' onclick='changePage("+(parseInt(currPage)-1)+")'>上页 <b></b></span>>";
+				}
+				if(currPage >= totalPage) {
+					nextPageView = "<span class='next-disabled'> 下页 <b></b></span>";
+				}else {
+					nextPageView = "<span class='next' href='#p' onclick='changePage("+(parseInt(currPage)+1)+")'>下页 <b></b></span>";
+				}
+				pageView = prePageView + nextPageView;
+				$('#top_pagi').html("<span class='text'>" + currPage +"/"+totalPage+"</span>" + pageView);
+				$('#total').html("<span> 共 <strong>"+totalNum+"</strong> 个商品</span>");
+				for ( var i = 0; i < resultLen; i++) {
+					list = list + "<li sku='696318'><div class='p-img'><a ";
+					list = list + "onclick='seClick('SEO',QUERY_KEYWORD,'696318');searchlog(1,696318,0,2)' ";
+					list = list + "href="+products[i].url+" target='_blank'> <img class='err-product' width='160' height='160' data-img='1' ";
+					list = list + "src="+products[i].pictureUrl+" title="+products[i].title+" ryt-i1tknp='4399'></a><div class='pi23' shop_id='0'></div>";
+					list = list + "</div><div class='p-name'><a onclick='seClick('SEO',QUERY_KEYWORD,'696318');searchlog(1,696318,0,1)' ";
+					list = list + "href="+products[i].url+" target='_blank' title=''> "+products[i].title+" </a></div><div class='p-price'><em></em>";
+					list = list + "<p class='productPrice'><em>￥ "+products[i].price+"</em></p><span id='p696318'> <a class='pt1' ";
+					list = list + "title='本商品正在降价销售中'>直降</a></span></div><div class='extra'><span class='star'> ";
+					list = list + "<span class='star-white'> <span class='star-yellow h5'> </span></span></span> ";
+					list = list + "<a onclick='searchlog(1,696318,0,3)' href='http://www.360buy.com/product/696318.html#comments-list' ";
+					list = list + "target='_blank'>已有7821人评价</a></div><div class='stocklist'>北京 <span class='st33'>现货</span>";
+					list = list + "</div><div class='btns'><a class='btn-buy'   ";
+					list = list + "onclick='seClick('SEO',QUERY_KEYWORD,'buy696318');searchlog(1,696318,0,4)' ";
+					list = list + "target='_blank' href='http://jd2008.360buy.com/purchase/InitCart.aspx?pid=696318&pcount=1&ptype=1'>";
+					list = list + "加入购物车</a><a id='coll696318' class='btn-coll' onclick='searchlog(1,696318,0,5)'>关注</a> ";
+					list = list + "<a id='comp_696318' class='btn-compare btn-compare-s' onclick='searchlog(1,696318,0,6)' skuid='696318'>";
+					list = list + "<span>对比</span></a></div></li>";
+				}
+				list=list+"</ul>";
+				$("#plist").html(list);
+				
+				var pages = "";
+				var maxPage = (totalPage<6)?totalPage:6;
+				if (currPage < 5) {
+					for (var i = 1; i <= maxPage; i++) {
+						if (i != currPage) {
+							pages = pages + "<a href='#filter' onclick='changePage(" + i+ ")'>" + i + "</a>";
+						} else {
+							pages = pages + "<a class='current' href='javascript:;' onclick='changePage('>"
+									+ i + "</a>";
+						}
+					}
+				} else if (currPage >= 5) {
+					pages = pages + "<a href='#filter' onclick='changePage("
+							+ (currPage - 3) + ")'>" + (currPage - 3) + "</a>";
+					pages = pages + "<a href='#filter' onclick='changePage("
+							+ (currPage - 2) + ")'>" + (currPage - 2) + "</a>";
+					pages = pages + "<a href='#filter' onclick='changePage("
+							+ (currPage - 1) + ")'>" + (currPage - 1) + "</a>";
+					pages = pages + "<a href='#filter' onclick='changePage(" + currPage
+							+ ")'>" + currPage + "</a>";
+					if ((currPage + 1) == totalPage) {
+						pages = pages + "<a href='#filter' onclick='changePage("
+								+ (currPage + 1) + ")'>" + (currPage + 1) + "</a>";
+					}
+					if ((currPage + 2) <= totalPage) {
+						pages = pages + "<a href='#filter' onclick='changePage("
+								+ (currPage + 1) + ")'>" + (currPage + 1) + "</a>";
+						pages = pages + "<a href='#filter' onclick='changePage("
+								+ (currPage + 2) + ")'>" + (currPage + 2) + "</a>";
+					}
+				}
+				var textPage = "<span class='page-skip'> <em> 共"+totalPage+"页 到第</em> " +
+						"<input class='jumpto' type='text' onkeydown='' value='"+(currPage+1)+"' />" +
+						"<em>页</em> <a class='btn-skipsearch' href='#filter' onclick='changePage()' value='确定'>" +
+						"确定</a></span>";
+				$("#pagin-btm").html(prePageView + pages + nextPageView + textPage);
+			});
+//			document.searchForm.submit();
+		}
+		
+
+		$().ready(function() {
+			if($('#key').val().length != 0) {
+				changePage(1);
+			};
+			
+			$("#key").keyup(function(e) {
+				var key = e.which;  //得到键盘的那个键。
+				if (key == 13) {    //如果是enter键。   
+					return;
+	            }
+				if(key == 38) {  //按方向键↑
+					if(j <= 0) {
+						if(j == 0)
+							j--;
+						$("#key")[0].value = typeWord;
+						return;
+					}
+					$("#keyword" + j).removeAttr("style");  //移除css属性
+					j--;
+					$("#keyword" + j).css("background-color","#98bf21");  //增加css属性
+					var text = $("#keyword" + j).find("font").text();
+					$("#key")[0].value = text;
+					return;
+				}
+				if(key == 40) {  //按方向键↓
+					if(j == (resultLen-1)) {
+						return;
+					}
+					$("#keyword" + j).removeAttr("style");
+					j++;
+					$("#keyword" + j).css("background-color","#98bf21");
+					var text = $("#keyword" + j).find("font").text();
+					$("#key")[0].value = text;
+					return;
+				}
+				typeWord = $('#key').val();
+				j = -1;
+				if(typeWord == preTypeWord) {  //如果前后两次输入的信息一样，则不进行重复查询了
+					return;
+				}
+				preTypeWord = typeWord;
+				if(typeWord.length == 0) {
+					$("#myend").html("");
+				}
+				var xmlRequest = $.ajax({
+					url : "showKeyWord.do",
+					type : "POST",
+					data : {
+						"preKeyWord" : typeWord
+					},
+					dataType : "json",
+				});
+				xmlRequest.done(function(msg) {
+					var list = "";
+					resultLen =msg.length;
+					for ( var i = 0; i < resultLen; i++) {
+						var s="<div length='100%' id='keyword" + i + "'><font color='green' align='left'>"+msg[i].keyword+"</font>";
+						s = s + "<span style='float:right;color:green'>约" + msg[i].totalNum + "个商品</span></div>";
+						list=list+s;
+					}
+					list=list+"";
+					$("#myend").html(list);
+				});
+			});
+			$("#key").keydown(function(e) {
+				var key = e.which;  //得到键盘的那个键。
+//				if (key == 13) {    //如果是enter键。   
+//					searchProduct();
+//	            }
+			});
+		});	
+		
+		function filterClick(a,page){
+			if(!a.parent().hasClass('curr')) {
+				a.parent().addClass("curr down");
+			}
+			a.parent().toggleClass('down up');
+			a.parent().siblings().removeClass("curr up down");
+			var keyword = $('#key').val();
+			var ordername = a.html();
+			var up = a.parent().hasClass('up');
+			searchAjax(page,keyword,ordername,up);
+		}  
+		
+		function searchAjax(page,keyword,ordername,up) {
+			var orderProdu = $.ajax({
+				url : "orderProduct.do",
+				type : "POST",
+				data : {
+					"up" : up,
+					"page" : page,
+					"keyword" : keyword,
+					"ordername" : ordername
+				},
+				dataType : "json",
+			});
+			orderProdu.done(function(msg) {
+				var list = "<ul class='list-h clearfix'>";
+				var totalNum = msg.totalNum;
+				var totalPage = msg.totalPage;
+				var currPage = msg.currPage;
+				var products = msg.products;
+				resultLen =msg.products.length;
+				var pageView = "";
+				var prePageView = "";
+				var nextPageView = "";
+				if(currPage <= 1) {
+					prePageView = "<span class='prev-disabled'> 上页 <b></b></span>";
+				}else {
+					prePageView = "<span class='pre' href='#p' onclick='changePage("+(parseInt(currPage)-1)+")'>上页 <b></b></span>>";
+				}
+				if(currPage >= totalPage) {
+					nextPageView = "<span class='next-disabled'> 下页 <b></b></span>";
+				}else {
+					nextPageView = "<span class='next' href='#p' onclick='changePage("+(parseInt(currPage)+1)+")'>下页 <b></b></span>";
+				}
+				pageView = prePageView + nextPageView;
+				$('#top_pagi').html("<span class='text'>" + currPage +"/"+totalPage+"</span>" + pageView);
+				$('#total').html("<span> 共 <strong>"+totalNum+"</strong> 个商品</span>");
+				for ( var i = 0; i < resultLen; i++) {
+					list = list + "<li sku='696318'><div class='p-img'><a ";
+					list = list + "onclick='seClick('SEO',QUERY_KEYWORD,'696318');searchlog(1,696318,0,2)' ";
+					list = list + "href="+products[i].url+" target='_blank'> <img class='err-product' width='160' height='160' data-img='1' ";
+					list = list + "src="+products[i].pictureUrl+" title="+products[i].title+" ryt-i1tknp='4399'></a><div class='pi23' shop_id='0'></div>";
+					list = list + "</div><div class='p-name'><a onclick='seClick('SEO',QUERY_KEYWORD,'696318');searchlog(1,696318,0,1)' ";
+					list = list + "href="+products[i].url+" target='_blank' title=''> "+products[i].title+" </a></div><div class='p-price'><em></em>";
+					list = list + "<p class='productPrice'><em>￥ "+products[i].price+"</em></p><span id='p696318'> <a class='pt1' ";
+					list = list + "title='本商品正在降价销售中'>直降</a></span></div><div class='extra'><span class='star'> ";
+					list = list + "<span class='star-white'> <span class='star-yellow h5'> </span></span></span> ";
+					list = list + "<a onclick='searchlog(1,696318,0,3)' href='http://www.360buy.com/product/696318.html#comments-list' ";
+					list = list + "target='_blank'>已有7821人评价</a></div><div class='stocklist'>北京 <span class='st33'>现货</span>";
+					list = list + "</div><div class='btns'><a class='btn-buy'   ";
+					list = list + "onclick='seClick('SEO',QUERY_KEYWORD,'buy696318');searchlog(1,696318,0,4)' ";
+					list = list + "target='_blank' href='http://jd2008.360buy.com/purchase/InitCart.aspx?pid=696318&pcount=1&ptype=1'>";
+					list = list + "加入购物车</a><a id='coll696318' class='btn-coll' onclick='searchlog(1,696318,0,5)'>关注</a> ";
+					list = list + "<a id='comp_696318' class='btn-compare btn-compare-s' onclick='searchlog(1,696318,0,6)' skuid='696318'>";
+					list = list + "<span>对比</span></a></div></li>";
+				}
+				list=list+"</ul>";
+				$("#plist").html(list);
+				
+				var pages = "";
+				var maxPage = (totalPage<6)?totalPage:6;
+				if (currPage < 5) {
+					for (var i = 1; i <= maxPage; i++) {
+						if (i != currPage) {
+							pages = pages + "<a href='#filter' onclick='SS.page(" + i+ ")'>" + i + "</a>";
+						} else {
+							pages = pages + "<a class='current' href='javascript:;' onclick='SS.page('>"
+									+ i + "</a>";
+						}
+					}
+				} else if (currPage >= 5) {
+					pages = pages + "<a href='#filter' onclick='SS.page("
+							+ (currPage - 3) + ")'>" + (currPage - 3) + "</a>";
+					pages = pages + "<a href='#filter' onclick='SS.page("
+							+ (currPage - 2) + ")'>" + (currPage - 2) + "</a>";
+					pages = pages + "<a href='#filter' onclick='SS.page("
+							+ (currPage - 1) + ")'>" + (currPage - 1) + "</a>";
+					pages = pages + "<a href='#filter' onclick='SS.page(" + currPage
+							+ ")'>" + currPage + "</a>";
+					if ((currPage + 1) == totalPage) {
+						pages = pages + "<a href='#filter' onclick='SS.page("
+								+ (currPage + 1) + ")'>" + (currPage + 1) + "</a>";
+					}
+					if ((currPage + 2) <= totalPage) {
+						pages = pages + "<a href='#filter' onclick='SS.page("
+								+ (currPage + 1) + ")'>" + (currPage + 1) + "</a>";
+						pages = pages + "<a href='#filter' onclick='SS.page("
+								+ (currPage + 2) + ")'>" + (currPage + 2) + "</a>";
+					}
+				}
+				var textPage = "<span class='page-skip'> <em> 共"+totalPage+"页 到第</em> " +
+						"<input class='jumpto' type='text' onkeydown='' value='"+(currPage+1)+"' />" +
+						"<em>页</em> <a class='btn-skipsearch' href='#filter' onclick='ajax_jumpto()' value='确定'>" +
+						"确定</a></span>";
+				$("#pagin-btm").html(prePageView + pages + nextPageView + textPage);
+			});
+		}
+		
+		function changePage(page) {
+			var ordername = "不排序";
+			var keyword = $('#key').val();
+			searchAjax(page,keyword,ordername);
+			
+		}

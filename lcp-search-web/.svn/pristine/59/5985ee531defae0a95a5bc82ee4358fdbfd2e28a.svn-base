@@ -1,0 +1,215 @@
+package lycy.app.lcp.controller;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import lycy.app.lcp.domain.search.KeyWordInfo;
+import lycy.app.lcp.domain.search.ProductInfo;
+import lycy.app.lcp.domain.search.SearchResult;
+import lycy.app.lcp.search.service.SearchService;
+import lycy.app.lcp.search.util.IndexPath;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping(value="search/")
+public class SearchController {
+	
+	@Autowired
+	private SearchService searchService;
+	
+	@RequestMapping(value="index.do")
+	public String index() {
+		return "index";
+	}
+
+	/**
+	 * @param ：@param request
+	 * @param ：@param response
+	 * @return : void
+	 * @throws : 
+	 * @author ：谢忠
+	 * @Date : 2013-2-20  下午5:44:48
+	 * @Description : TODO 搜索产品信息
+	 */
+	@RequestMapping(value="searchAllProduct.do")
+	public void searchAllProduct(HttpServletRequest request,
+			HttpServletResponse response) {
+		String page = request.getParameter("page");
+		String keyword = request.getParameter("keyword");
+		if(keyword == null || keyword.trim().length() == 0) {
+			return;
+		}
+		if(page == null || page.trim().length() == 0) {
+			page = "1";
+		}
+		SearchResult results = searchService.queryPageProductByKeyWord(keyword,Integer.valueOf(page));
+		List<ProductInfo> products = results.getProductinfos();
+		JSONObject result =new JSONObject();
+		result.put("keyword", keyword);
+		result.put("totalNum", results.getTotal());
+		result.put("totalPage", (results.getTotal()+IndexPath.pageSize-1)/IndexPath.pageSize);
+		result.put("currPage", results.getCurPage());
+		result.put("products", products);
+		this.sendJSONString(response, result, null);
+	}
+	
+	@RequestMapping(value="searchProduct.do")
+	public String searchProduct(HttpServletRequest request,
+			HttpServletResponse response) {
+		String page = request.getParameter("page");
+		String keyword = request.getParameter("keyword");
+		if(keyword == null || keyword.trim().length() == 0) {
+			return "index";
+		}
+		if(page == null || page.trim().length() == 0) {
+			page = "1";
+		}
+		SearchResult results = searchService.queryPageProductByKeyWord(keyword,Integer.valueOf(page));
+		List<ProductInfo> products = results.getProductinfos();
+		request.setAttribute("keyword", keyword);
+		request.setAttribute("totalNum", results.getTotal());//总记录数
+		request.setAttribute("totalPage", (results.getTotal()+IndexPath.pageSize-1)/IndexPath.pageSize);//总记录数
+		request.setAttribute("currPage", results.getCurPage());
+		request.setAttribute("products", products);
+		return "index";
+	}
+	
+	/**
+	* @Title: showKeyWord  
+	* @Description: TODO 提示关键字
+	* @param  @param request
+	* @param  @param response   
+	* @return void    返回类型  
+	* @author 谢忠
+	* @time   2013-3-6  上午9:39:01
+	* @throws
+	 */
+	@RequestMapping(value="showKeyWord.do")
+	public void showKeyWord(HttpServletRequest request,
+			HttpServletResponse response) {
+		String preKeyWord = request.getParameter("preKeyWord");
+		if(preKeyWord == null || preKeyWord.trim().length() == 0) {
+			return;
+		}
+		List<KeyWordInfo> keywords = new ArrayList<KeyWordInfo>();
+		try {
+			keywords = searchService.queryKeywords(preKeyWord);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		JSONArray productsJson = new JSONArray();
+		for(Iterator<KeyWordInfo> it = keywords.iterator(); it.hasNext();) {
+			JSONObject obj = new JSONObject();
+			KeyWordInfo keyword = it.next();
+			obj.put("keyword", keyword.getWord());
+			obj.put("totalNum", keyword.getTotalNum());
+			productsJson.add(obj);
+		}
+		this.sendJsonArray(response, productsJson, null);
+	}
+	
+	@RequestMapping(value="orderProduct.do")
+	public void orderProduct(HttpServletRequest request,
+			HttpServletResponse response) {
+		String page = request.getParameter("page");
+		String keyword = request.getParameter("keyword");
+		String orderName = request.getParameter("ordername");
+		String up = request.getParameter("up");
+		boolean order = true;
+		if("true".equalsIgnoreCase(up)) {
+			order = false;
+		}
+		if(page == null || page.trim().length() == 0) {
+			page = "1";
+		}
+		SearchResult results = new SearchResult();
+		if("不排序".equalsIgnoreCase(orderName)) {
+			results = searchService.queryPageProductByKeyWord(keyword,Integer.valueOf(page));
+		}
+		else if("销量".equalsIgnoreCase(orderName)) {
+			System.out.println("该方法还木有实现");
+		}
+		else if("价格".equalsIgnoreCase(orderName)) {
+//			results = searchService.queryProductOrderByPrice(keyword, page, true);
+			results = searchService.queryProductOrderByPrice(keyword, Integer.valueOf(page), order);
+		}
+		else if("上架时间".equalsIgnoreCase(orderName)) {
+			results = searchService.queryProductOrderByCreateDate(keyword, Integer.valueOf(page), order);
+		}
+		else if("评论数".equalsIgnoreCase(orderName)) {
+	
+		}
+		List<ProductInfo> products = results.getProductinfos();
+		JSONObject result =new JSONObject();
+		result.put("totalNum", results.getTotal());
+		result.put("totalPage", (results.getTotal()+IndexPath.pageSize-1)/IndexPath.pageSize);
+		result.put("currPage", results.getCurPage());
+//		JSONArray productsJson = new JSONArray();
+//		for(Iterator<ProductInfo> it = products.iterator(); it.hasNext();) {
+//			JSONObject obj = new JSONObject();
+//			ProductInfo product = it.next();
+//			obj.put("productId", product.getId());
+//			obj.put("productName", product.getTitle());
+//			obj.put("productContext", product.getDescription());
+//			obj.put("productUrl", product.getUrl());
+//			obj.put("pictureUrl", product.getPictureUrl());
+//			obj.put("productPrice", product.getPrice());
+//			obj.put("productCategory", product.getCategoryName());
+//			obj.put("productBrand", product.getProductBrand());
+//			productsJson.add(obj);
+//		}
+		result.put("products", products);
+		this.sendJSONString(response, result, null);
+	}
+	
+	public void sendJSONString(HttpServletResponse resp,JSONObject json,String contentType)
+	{
+		try
+		{
+			if(contentType==null)
+				contentType = "text/html";
+			resp.setContentType(contentType);
+			resp.getWriter().write(json.toString());
+			System.out.println(json.toString());
+			resp.getWriter().flush();
+			resp.flushBuffer();
+			resp.setStatus(HttpServletResponse.SC_OK);
+		}
+		catch(Exception ex)
+		{
+		}
+	}
+
+		/**输出JSONArray字符串数组
+	 * 
+	 * @param resp
+	 * @param jsonArray
+	 * @param contentType
+	 * @throws Exception
+	 */
+	public void sendJsonArray(HttpServletResponse resp,JSONArray jsonArray,String contentType)
+	{
+		try
+		{
+			if(contentType==null)
+				contentType = "text/html";
+			resp.setContentType(contentType);
+			resp.getWriter().write(jsonArray.toString());
+			resp.getWriter().flush();
+			resp.flushBuffer();
+			resp.setStatus(HttpServletResponse.SC_OK);
+		}
+		catch(Exception ex)
+		{
+		}
+	}
+}

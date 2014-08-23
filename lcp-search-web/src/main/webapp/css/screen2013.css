@@ -1,0 +1,28 @@
+﻿.base {
+	POSITION: relative; 
+	TEXT-ALIGN: center; 
+	MARGIN: 0px auto; 
+	/*WIDTH: 480px;*/
+	width:600px;
+}
+#photo {
+	/*WIDTH: 480px; */
+	width:600px;
+	HEIGHT: 220px; 
+	OVERFLOW: hidden
+}
+#photo UL {
+	WIDTH: 3300px; MARGIN-LEFT: 0px
+}
+#photo UL LI {
+	DISPLAY: block; FLOAT: left
+}
+#photo IMG {
+	DISPLAY: block
+}
+#details {
+	BORDER-BOTTOM: #ccc 1px solid; BORDER-LEFT: #ccc 1px solid; PADDING-BOTTOM: 3px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; BORDER-TOP: #ccc 1px solid; BORDER-RIGHT: #ccc 1px solid; PADDING-TOP: 3px; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px
+}
+#hover-box {
+	Z-INDEX: 30; POSITION: relative; MARGIN-TOP: -23px; HEIGHT: 23px
+}

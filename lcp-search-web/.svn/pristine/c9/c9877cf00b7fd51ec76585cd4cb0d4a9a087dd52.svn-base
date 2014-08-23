@@ -1,0 +1,22 @@
+*{margin:0;padding:0;list-style-type:none;}
+a,img{border:0;}
+body{font:12px/180% Arial, Helvetica, sans-serif, "����";}
+
+
+.limit-box{position:relative;width:600px;margin:20px auto;height:150px;overflow:hidden;border:1px solid #e6e6e6}
+
+/* limit-buy-bd */
+.limit-buy-bd{overflow:hidden;position:absolute;top:0px;left:0;width:580px;margin-left: 10px;z-index:1}
+/* btn-prev */
+.btn-prev,.btn-next{overflow:hidden;position:absolute;display:none;top:50px;width:27px;height:48px;background:url(../images/arrowbg.png) no-repeat 0 0;z-index:10}
+.btn-prev{left:0}
+.btn-next{right:0;background-position:-40px 0}
+.btn-prev:hover{background-position:0 -60px}
+.btn-prev:active{background-position:0 -120px}
+.btn-next:hover{background-position:-40px -60px}
+.btn-next:active{background-position:-40px -120px}
+/* products */
+.products{float:left;width:971px}
+.products li{float:left;position:relative;width:164px;height:150px;padding:10px 15px 0;}
+.products li .pic{overflow:hidden;position:relative;width:120px;height:120px;margin:0 auto 4px}
+.products li .pic img{width:120px;height:120px}

@@ -1,0 +1,330 @@
+/*页面总体样式控制*/
+body {
+    background: url("../images/body-background.gif") repeat-x scroll 0 0 transparent;
+    font: 0.8em/1.5 "arial",sans-serif;
+	color: #404040;
+}
+/*页面总体样式控制结束*/
+/**/
+html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, address, big, cite, code, del, em, font, img, ins, small, strong, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend {
+    margin: 0;
+    padding: 0;
+}
+
+
+/*回到顶部*/
+#toppanel {
+    position: relative;
+    z-index: 1000;
+    width: 1210px;
+    margin: 0 auto;
+    width: 990px;
+}	
+#sidepanel {
+    bottom: 0;
+    position: fixed;
+    right: 0;
+    z-index: 1000;
+}
+.hide {
+    display: none;
+}
+
+#sidepanel a:link, #sidepanel a:visited {
+    background-position: 0 -606px;
+}
+#sidepanel a {
+    display: block;
+    height: 66px;
+    line-height: 14px;
+    margin: 5px 0;
+    padding: 28px 4px 0;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    width: 17px;
+}
+#sidepanel a, #sidepanel b {
+    background-image: url("http://misc.360buyimg.com/lib/skin/2012/i/20111221C.png");
+    background-repeat: no-repeat;
+}
+
+/*回到顶部结束*/
+
+#category-panel {
+	float: left;
+	width: 225px;
+	margin-top: 10px;
+	margin-right: 0px;
+}
+
+#advert-panel {
+	float: left;
+	height: 390px;
+	width: 600px;
+	margin: 5px;
+	margin-top: 5px; 
+}
+
+#top-advert-panel {
+	height: 220px;
+	width: 600px;
+	position: relative;
+}
+
+#top-advert-panel .slide-items, #top-advert-panel .slide-items li {
+height: 220px;
+overflow: hidden;
+}
+#top-advert-panel .slide-items {
+	position:absolute;
+	overflow: hidden;
+}
+
+#top-advert-panel ul {
+	list-style:none;
+}
+#top-advert-panel .slide-controls {
+position: absolute;
+bottom: 3px;
+z-index: 1;
+width: 530px;
+height: 22px;
+padding: 4px 10px;
+text-align: right;
+}
+#top-advert-panel .slide-controls span {
+	width: 22px;
+	height: 22px;
+	line-height: 22px;
+}
+.slide-controls .curr {
+background: #E4393C;
+}
+
+.slide-controls span {
+display: inline-block;
+margin: 0 1px;
+background: #999;
+text-align: center;
+cursor: default;
+color: white;
+border-radius: 12px;
+-moz-border-radius: 12px;
+-webkit-border-radius: 12px;
+}
+
+#bottom-advert-panel {
+	height: 165px;
+}
+
+#right-panel {
+	float: left;
+	height: 390px;
+	width: 375px;
+	margin-top: 5px;
+}
+
+#top-right-panel {
+	height: 213px;
+	background-color:#F5F5F5;
+	border: 1px solid #DDDDDD;
+}
+
+#bottom-right-panel .help-guest {
+	clear:both;
+	padding-top:40px;
+}
+/*
+#bottom-right-panel .help-guest a{
+	height: 40px;
+	width: 110px;
+	float: left;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
+	background-color: #84B199;
+	margin-right: 0px;
+	margin-left: 3px;
+	font-weight: bold;
+	vertical-align: middle;
+	padding: 0px;
+	line-height: 40px;
+}
+
+#bottom-right-panel .help-guest a:hover{
+	background-color: #00CC33;
+
+}
+*/
+
+#bottom-right-panel .security-help {
+	text-align:center;
+	padding-left:50px;
+	padding-top:15px;
+}
+
+#bottom-right-panel .security-help .list-product li {
+    display: inline;
+    float: left;
+    margin: 0 10px;
+}
+#bottom-right-panel .security-help .cell-security-icon {
+    margin-bottom: 3px;
+}
+
+.cell-security-icon {
+    background: url("../images/security_bg.jpg") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 33px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    width: 28px;
+}
+
+#bottom-right-panel .security-help .title-name-1 {
+    background-position: 0 0;
+}
+#bottom-right-panel .security-help .title-name-2 {
+    background-position: -80px 0;
+}
+#bottom-right-panel .security-help .title-name-3 {
+    background-position: -160px 0;
+}
+#bottom-right-panel .security-help .title-name2 {
+    background-position: 0 -160px;
+}
+
+#bottom-right-panel {
+	height: 165px;
+	margin-top: 10px;
+	background-color:#F5F5F5;
+	border: 1px solid #DDDDDD;
+}
+
+/* switchBox */
+#ruleAndNotice{
+	height:213px;
+}
+#ruleAndNotice dt{
+	height:20px;
+	margin: 0px;
+}
+#ruleAndNotice dt a{
+	cursor:pointer;
+	float:left;
+	font-size:12px;
+	height:20px;
+	line-height:20px;
+	text-align:center;
+	text-decoration:none;
+	font-style:normal;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	width: 50px;
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #999999;
+	background-color: #cccccc;
+}
+#ruleAndNotice dt .on{	
+	background: url("../images/navbar-select-bg.gif") repeat scroll 0 0 transparent;
+	color:#FFFFFF;}
+#ruleAndNotice dt .active{background-color:#ffffcc;font-weight:bolder;}
+#ruleAndNotice dt .on, .switchBox dt .active, .switchBox a:hover{}
+#ruleAndNotice dt .fat{color:#0000ff;width:150px;}
+#ruleAndNotice dt .fat:hover{color:#ffff00;}
+#ruleAndNotice dd{
+	clear:both;
+	display:none;
+	height:100px;
+	height:100px;
+	min-height:100px!important;
+	font-family:"宋体";
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 15px;
+}
+
+#ruleAndNotice dd a:hover{
+	color:#84B199;
+}
+
+#show-product {
+	clear: left;
+}
+
+.floor-category {
+	height: 400px;
+	margin-top: 30px;
+	background-color: #FFFFFF;
+	clear: left;
+}
+
+#show-product .floor-separator{
+	border-bottom: 2px solid #DDDDDD;
+	height:35px;
+	margin-bottom:5px;
+	padding-top:10px;
+	font-size:14px;
+}
+
+#show-product .floor-separator .icon-bg{
+	background: url("../images/popo.jpg") no-repeat scroll 0 0 transparent;
+	height: 32px;
+    padding-left: 8px;
+    padding-top: 5px;
+    width: 32px;
+    color:#FFFFFF;
+}
+
+#show-product .floor-separator .floor-title{
+	height:30px;
+	margin-bottom:5px;
+	font-size:18px;
+	padding-top:10px;
+	margin-left:0px;
+}
+
+.left-floor-category {
+	height: 400px;
+	background-color: #F5F5F5;
+	width: 180px;
+	float: left;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	margin-right: 10px;
+}
+
+.left-floor-category dl{
+	background-color:#CCCCCC;
+	color:#ffffff;
+	cursor:pointer;
+	font-size:14px;
+	height:30px;
+	line-height:30px;
+	text-align:center;
+	text-decoration:none;
+	width:180px;
+	font-style:normal;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	clear: both;
+}
+
+.left-floor-category dt a{
+	text-decoration: none;
+	text-align: center;
+	width: 90px;
+	float: left;
+	line-height: 40px;
+}
+
+.right-floor-category {
+	height: 400px;
+	width: 1010px;
+	float: left;
+}

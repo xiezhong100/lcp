@@ -1,0 +1,96 @@
+/*页面总体样式控制*/
+body {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #333333;
+    font: 12px/150% Arial,Verdana,"宋体";
+}
+/*页面总体样式控制结束*/
+/**/
+html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, address, big, cite, code, del, em, font, img, ins, small, strong, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend {
+    margin: 0;
+    padding: 0;
+}
+
+.w {
+    margin: 0 auto;
+    width: 990px;
+}
+.w {
+    width: 1210px;
+}
+
+/*结束*/
+
+
+/*回到顶部*/
+#toppanel {
+    position: relative;
+    z-index: 1000;
+    width: 1210px;
+    margin: 0 auto;
+    width: 990px;
+}	
+#sidepanel {
+    bottom: 0;
+    position: fixed;
+    right: 0;
+    z-index: 1000;
+}
+.hide {
+    display: none;
+}
+
+#sidepanel a:link, #sidepanel a:visited {
+    background-position: 0 -606px;
+}
+#sidepanel a {
+    display: block;
+    height: 66px;
+    line-height: 14px;
+    margin: 5px 0;
+    padding: 28px 4px 0;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    width: 17px;
+}
+#sidepanel a, #sidepanel b {
+    background-image: url("http://misc.360buyimg.com/lib/skin/2012/i/20111221C.png");
+    background-repeat: no-repeat;
+}
+/*结束*/
+	
+	
+	
+	
+/*主体部分*/
+#main {
+    width: 1210px;
+    margin: 0 auto;
+}
+/*主体部分结束*/
+
+#show_info {
+	clear:left;
+	width:1100px;
+	margin-top:3px;
+	padding-top: 10px; 
+	padding-bottom: 20px; 
+	padding-left: 8px;
+}
+
+.show_shop {
+	clear: left;
+}
+
+.show_shop li {
+	float: left;
+	height: 260px;
+	width: 280px;
+	text-align: center;
+	list-style-type: none;
+	margin-top: 5px;
+	margin-right: 11px;
+	margin-bottom: 5px;
+	margin-left: 11px;
+}

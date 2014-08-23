@@ -1,0 +1,234 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="ctx" value="<%=request.getContextPath()%>"></c:set>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>林产品首页</title>
+<link href="${ctx}/css/index_xiezhong.css" rel="stylesheet"
+	type="text/css" />
+<link href="${ctx}/css/jquery.slideBox.css" rel="stylesheet"
+	type="text/css" />
+<link href="${ctx}/css/groupChangeShow.css" rel="stylesheet"
+	type="text/css" />
+<link href="${ctx}/css/floorShow.css" rel="stylesheet" type="text/css" />
+<script src="${ctx}/js/jquery-1.9.0.js"></script>
+<script src="${ctx}/js/jquery.slideBox.min.js" type="text/javascript"></script>
+<script src="${ctx}/js/groupChangeShow.js" type="text/javascript"></script>
+<script type="text/javascript" src="${ctx}/js/ks-switch.pack.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script>
+	$(function($) {
+		$(".switchBox").switchTab({
+			titCell : "dt a",
+			trigger : "mouseover",
+			delayTime : 0
+		});
+		$("#ruleAndNotice").switchTab({
+			titCell : "dt a",
+			trigger : "mouseover",
+			delayTime : 0
+		});
+	});
+</script>
+
+</head>
+
+<body>
+	<!--回到顶部-->
+	<div id="toppanel" class="toppanel">
+		<div id="sidepanel" class="hide"
+			style="right: 200.5px; display: block;">
+			<a class="gotop" title="使用快捷键t也可返回顶部哦！" href="#"> <b> </b> 返回顶部
+			</a>
+		</div>
+	</div>
+	<!--回到顶部结束-->
+
+	<!--头部-->
+	<!--导航栏-->
+	<%@ include file="topTool.jsp"%>
+	<div class="w">
+		<%@ include file="search.jsp" %>
+		<%@ include file="loadTool.jsp"%>
+		<div id="category-panel"><%@ include file="categoryShow.jsp"%></div>
+		<div id="advert-panel">
+			<div id="top-advert-panel">
+				<div id="demo3" class="slideBox">
+					<ul class="items">
+					<c:forEach var="topproduct" items="${topFloorProducts }">
+						<li><a href="${topproduct.url}" title=""><img
+								width="600" height="220" src="${topproduct.pictureUrl}"></a></li>
+					</c:forEach>
+					</ul>
+				</div>
+			</div>
+			<div id="bottom-advert-panel">
+				<div class="limit-box" id="J-lb">
+					<a href="javascript:void(0);" class="btn-prev"></a>
+
+					<div class="limit-buy-bd" id="limit-buy">
+						<ul class="products">
+						<c:set var="i" value="1"></c:set>	
+							<c:forEach var="bottomproduct" items="${bottomFloorProducts }">
+							<li><p class="pic"><a href="${bottomproduct.url }" target="_blank"><img src="${bottomproduct.pictureUrl }"
+										alt="" /></a></p>
+							</li>
+							<c:if test="${i%3==0 && i != 12}">
+								</ul><ul class="products">
+							</c:if>
+							<c:set var="i" value="${i+1}"></c:set>
+							</c:forEach>
+							</ul>
+					</div>
+
+					<a href="javascript:void(0);" class="btn-next" style="left: 571px;"></a>
+				</div>
+			</div>
+		</div>
+		<div id="right-panel">
+			<div id="top-right-panel">
+				<div class="help-guest">
+					<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;林产品网是亚太最大的网络林产品产业零售商圈，致力打造全球领先网络林产品产业零售商圈，于2013年5月10日投资创立。林产品网现在业务跨越C2C（个人对个人）、B2C（商家对个人）两大部分。</div>
+					<a href="" class="hg-regist">免费注册</a> <a href="" class="hg-login">登录</a>
+					<a href="" class="hg-freeopen">免费开店</a>
+				</div>
+			</div>
+			<div id="bottom-right-panel">
+				<dl id="ruleAndNotice">
+					<dt>
+						<a href="http://www.jsfoot.com/jquery/">规则</a> <a
+							href="http://www.jsfoot.com/js/">公告</a> <a
+							href="http://www.jsfoot.com/flash/">论坛</a>
+					</dt>
+					<dd>
+						<a href="" target="_blank">紧急通知-扣分分值清零相关</a><br /> <a href=""
+							target="_blank">聚划算生活团规则</a><br /> <a href="" target="_blank">大淘宝宣言</a><br />
+						<a href="" target="_blank">-淘宝规则</a><br /> <a href=""
+							target="_blank">聚划算生活团规则</a><br />
+					</dd>
+					<dd>
+						<a href="" target="_blank">注册林产品网的若干注意事项</a><br /> 
+						<a href="" target="_blank">端午来袭，林产品网举行特大优惠活动</a><br /> 
+						<a href="" target="_blank">端午来袭，林产品网举行特大活动</a><br /> 
+					</dd>
+					<dd>
+						<a href="" target="_blank">js选项卡类似j的js tab选项卡切换效果</a><br /> <a
+							href="" target="_blank">js多功能选项卡换内容图片延迟加载</a>
+					</dd>
+				</dl>
+			</div>
+		</div>
+
+		<div id="show-product">
+			<div class="floor-category">
+				<div class="left-floor-category">
+					<c:forEach var="category" items="${firstFloorCategories }">
+						<c:if test="${!category.leaf }">
+							<dl>${category.name }</dl>
+						</c:if>
+					</c:forEach>
+
+					<dt>
+						<c:forEach var="category" items="${firstFloorCategories }">
+							<c:if test="${category.leaf }">
+								<a href="${category.description }">${category.name }</a>
+							</c:if>
+						</c:forEach>
+					</dt>
+				</div>
+				<div class="right-floor-category">
+					<div class="productShowByCategory">
+						<dl class="switchBox" id="switchBox3">
+							<dt>
+								<c:forEach var="Category_products"
+									items="${firstFloorProducts }">
+									<c:set var="category" value="${Category_products.key}" />
+									<a href="http://www.jsfoot.com/jquery/">${category }</a>
+								</c:forEach>
+							</dt>
+							<c:forEach var="Category_products" items="${firstFloorProducts }">
+								<c:set var="products" value="${Category_products.value}" />
+								<dd>
+									<c:forEach var="product" items="${products }">
+										<li class="category-one-product">
+											<div class="p-picture">
+												<a title="${product.productName }" target="_blank"
+													href="${product.url }"><img width="100" height="100"
+													data-img="1" alt="${product.productName }"
+													src="${product.pictureUrl }" class="err-product"></a>
+											</div>
+											<div class="p-name">
+												<a title="${product.productName }" target="_blank"
+													href="${product.url }">${product.productName }</a>
+											</div>
+											<div class="p-price">￥${product.productPrice }</div>
+										</li>
+									</c:forEach>
+								</dd>
+							</c:forEach>
+						</dl>
+					</div>
+				</div>
+			</div>
+			<div class="floor-category">
+				<div class="left-floor-category">
+					<c:forEach var="scategory" items="${secondFloorCategories }">
+						<c:if test="${!scategory.leaf }">
+							<dl>${scategory.name }</dl>
+						</c:if>
+					</c:forEach>
+
+					<dt>
+						<c:forEach var="scategory" items="${secondFloorCategories }">
+							<c:if test="${scategory.leaf }">
+								<a href="${scategory.description }">${scategory.name }</a>
+							</c:if>
+						</c:forEach>
+					</dt>
+				</div>
+				<div class="right-floor-category">
+					<div class="productShowByCategory">
+						<dl class="switchBox" id="switchBox3">
+							<dt>
+								<c:forEach var="Category_products"
+									items="${secondFloorProducts }">
+									<c:set var="category" value="${Category_products.key}" />
+									<a href="http://www.jsfoot.com/jquery/">${category }</a>
+								</c:forEach>
+							</dt>
+							<c:forEach var="Category_products" items="${secondFloorProducts }">
+								<c:set var="products" value="${Category_products.value}" />
+								<dd>
+									<c:forEach var="product" items="${products }">
+										<li class="category-one-product">
+											<div class="p-picture">
+												<a title="${product.productName }" target="_blank"
+													href="${product.url }"><img width="100" height="100"
+													data-img="1" alt="${product.productName }"
+													src="${product.pictureUrl }" class="err-product"></a>
+											</div>
+											<div class="p-name">
+												<a title="${product.productName }" target="_blank"
+													href="${product.url }">${product.productName }</a>
+											</div>
+											<div class="p-price">￥${product.productPrice }</div>
+										</li>
+									</c:forEach>
+								</dd>
+							</c:forEach>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--导航栏结束-->
+	<!--头部结束-->
+
+	<!--热销与最近浏览结束-->
+	<%@ include file="helpTool.jsp"%>
+	<%@ include file="footTool.jsp"%>
+</body>
+</html>

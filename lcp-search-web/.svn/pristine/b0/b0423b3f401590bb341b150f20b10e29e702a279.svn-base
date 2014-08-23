@@ -1,0 +1,71 @@
+package lycy.app.lcp.controller;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+/**
+ * @Title: TODO  
+ * @Description: TODO  
+ * @author: 谢忠
+ * @date: 2013-4-3 上午11:49:23  
+ *  
+ */
+public class Test {
+	public static void main(String[] args) {
+//		String string = null;
+//		if(string != null && string.trim().length() == 0) {
+//			string = null;
+//		}
+////		System.out.println("zhengc");
+//		
+//		for (int i = 0; i < 10; i++) {
+//			int a = (int)(Math.random()*4)+1;
+//			System.out.println(a);
+//		}
+//		String string = "类目:苹果 颜色:红色";
+//		String str[] = string.split(" ");
+//		for (int i = 0; i < str.length; i++) {
+//			System.out.println("取值： " + str[i].split(":")[0]);
+//		}
+//		
+//		//2013年4月13日 22:43:58
+//		String string2 = new String("猪，，狗aa");
+//		for (int i = 0; i < string2.length(); i++) {
+//			char word = string2.charAt(i);
+//			if('猪'== word) {
+//				System.out.println("匹配成功");
+//			}
+//			System.out.println(word);
+//		}
+		
+		testNullString();
+	}
+	
+	public static void testNullString() {
+		String string = null;
+		if(string == null || string.trim().length() == 0) {
+			System.out.println("string is null !");
+		}
+	}
+	
+	public static void testPath() {
+		String pathString = Test.class.getResource("/").getPath();
+		pathString = pathString.replace("/target/classes", "") + "src/main/webapp/WEB-INF/";
+		System.out.println(pathString);
+		String s_xmlpath="test.properties"; 
+		Properties properties = new Properties();
+		try {
+			properties.load(new FileReader(new File(pathString+s_xmlpath)));
+			String name = (String) properties.get("name");
+			System.out.println(name);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}

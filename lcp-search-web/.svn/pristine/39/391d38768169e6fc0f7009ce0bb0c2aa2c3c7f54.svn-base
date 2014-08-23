@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>林产品测试页面</title>
+</head>
+<style type="text/css">
+</style>
+<!--  
+<link type="text/css" rel="stylesheet" href="css/search.css"/>
+-->
+<script type="text/javascript" src="js/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="js/search.js"></script>
+
+</head>
+<body>
+	<div id=m style="width: 100%" align="center">
+		<p id=lg>
+		<h1 align="center">林产品交易平台</h1>
+		</p>
+		<div id=fm>
+			<form name=f id=search_form>
+				<table>
+					<tr>
+						<td><input type="text" name=wd id=kw maxlength=100
+							style="width: 474px;" autocomplete="off" /></td>
+						<td><input type=button name="search_btn" value="搜索"
+							id="search_btn" onclick="searchProduct()" /></td>
+					</tr>
+					<tr>
+						<td><div id="myend"
+								style="position: absolute; width: 477px; background-color: #F5FFFA"></div></td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<p id=lm></p>
+	</div>
+	<hr />
+	<div class='mt'>
+		<h1>
+			'沙发' <strong>找到2件相关商品</strong>
+		</h1>
+	</div>
+	<div>
+		已经选择的属性： <span class='has-selected'
+			style='font-size: 14px; color: #FF0000'>产地:华北 </span> <span
+			class='has-selected' style='font-size: 14px; color: #FF0000'>色调:白色</span>
+	</div>
+
+	<span class="has-selected" )="" onclick="deleteAttr($(this)"
+		style="font-size: 14px; color: #FF0000">产地:华北 </span>
+	<div id="showProduct"></div>
+
+
+	<div id="myend"
+		style="position: absolute; width: 420px; background-color: #F5FFFA">
+		<div id="keyword0" onclick="chooseKeyword($(this))" length="100%"  onmouseover="mouseSelect($(this))">
+			<font color="green" align="left">食用菌</font> <span
+				style="float: right; color: green">约0个商品</span>
+		</div>
+		<div id="keyword1" onclick="chooseKeyword($(this))" length="100%"  onmouseover="mouseSelect($(this))">
+			<font color="green" align="left">山东烟台栖霞红苹果40</font> <span
+				style="float: right; color: green">约0个商品</span>
+		</div>
+		<div id="keyword2" onclick="chooseKeyword($(this))" length="100%"  onmouseover="mouseSelect($(this))">
+			<font color="green" align="left">三喜隆沙发</font> <span
+				style="float: right; color: green">约11个商品</span>
+		</div>
+		<div id="keyword3" onclick="chooseKeyword($(this))" length="100%"  onmouseover="mouseSelect($(this))">
+			<font color="green" align="left">书桌/电脑台</font> <span
+				style="float: right; color: green">约0个商品</span>
+		</div>
+		<div id="keyword4" onclick="chooseKeyword($(this))" length="100%"  onmouseover="mouseSelect($(this))">
+			<font color="green" align="left">山东烟台栖霞红苹果42</font> <span
+				style="float: right; color: green">约0个商品</span>
+		</div>
+		<div id="keyword5" onclick="chooseKeyword($(this))" length="100%"  onmouseover="mouseSelect($(this))">
+			<font color="green" align="left">山杨</font> <span
+				style="float: right; color: green">约0个商品</span>
+		</div>
+		<div id="keyword6" onclick="chooseKeyword($(this))" length="100%" style="cursor:pointer">
+			<font color="green" align="left">山东烟台栖霞红苹果41</font> <span
+				style="float: right; color: green">约0个商品</span>
+		</div>
+	</div>
+</body>
+<script>
+		$().ready(function() {
+			$("body").click(function(){
+				alert("鼠标点击事件");
+			});
+		});	
+		function chooseKeyword(keyword) {
+			var key = keyword.find("font").text();
+			alert(key);
+		}
+		
+		function mouseSelect(selectDiv) {
+			var key = selectDiv.find("font").text();
+		}
+		var exitAttrString = $(".has-selected").text();
+		var exitAttrString1 = $(".has-selected").first().text();
+		alert(exitAttrString);
+</script>
+</html>

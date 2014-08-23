@@ -1,0 +1,328 @@
+package lycy.app.lcp.controller;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import lycy.app.lcp.domain.product.Product;
+import lycy.app.lcp.domain.search.KeyWordInfo;
+import lycy.app.lcp.domain.search.ProductInfo;
+import lycy.app.lcp.search.core.ShopIndex;
+import lycy.app.lcp.search.domain.ShowDocument;
+import lycy.app.lcp.search.service.KeyWordService;
+import lycy.app.lcp.search.service.ProductIndexService;
+import lycy.app.lcp.search.service.UpdateIndexLibService;
+import lycy.app.lcp.search.util.IndexPath;
+import lycy.app.lcp.search.util.GlobalDef;
+import lycy.app.lcp.service.search.KeyWordInfoService;
+import lycy.app.lcp.service.search.ProductService;
+import lycy.app.lcp.service.search.UpdateLogService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @Title: TODO  
+ * @Description: TODO  
+ * @author: 谢忠
+ * @date: 2013-3-22 下午6:43:17  
+ *  
+ */
+	@Controller
+	@RequestMapping(value="manager/")
+	public class ManagerController {
+		
+		@Autowired
+		private KeyWordService keyWordService;
+		
+		@Autowired
+		private ProductIndexService productIndexService;
+		
+		@Autowired
+		private KeyWordInfoService keyWordInfoService;
+		
+		@Autowired
+		private UpdateIndexLibService updateIndexLibService;
+		
+		@Autowired
+		private ProductService productService;
+		
+		@Autowired
+		private ShopIndex shopIndex;
+		
+		@Autowired
+		private UpdateLogService updateLogService;
+		
+		
+		@RequestMapping(value="updateIndexlibByPid")
+		public String updateIndexlibByPid(HttpServletRequest request,
+				HttpServletResponse response) {
+			String pid = request.getParameter("pid");
+			if(pid == null) {
+				return null;
+			}
+			productIndexService.createIndexByPid(pid);
+			return "t";
+		}
+
+		@RequestMapping(value="manager.do")
+		public String manager() {
+			return "manager/adminManager";
+		}
+		
+		@RequestMapping(value="top.do")
+		public String top() {
+			return "manager/top";
+		}
+		
+		@RequestMapping(value="center.do")
+		public String center() {
+			return "manager/center";
+		}
+		
+		@RequestMapping(value="left.do")
+		public String left() {
+			return "manager/left";
+		}
+		
+		@RequestMapping(value="addKeyWord.do")
+		public String addKeyWord(HttpServletRequest request,
+				HttpServletResponse response) {
+			
+			String command = request.getParameter("command");
+			String page = request.getParameter("page");
+			if(page == null || page.length() == 0) {
+				page = "0";
+			}
+			if("show".equalsIgnoreCase(command)) {
+				Pageable pageable = new PageRequest(Integer.valueOf(page),IndexPath.pageSize);
+				List<KeyWordInfo> keywords = keyWordInfoService.getAllByPage(pageable);
+				if(keywords == null || keywords.size() == 0) {
+					request.setAttribute("page", Integer.valueOf(page)-1); //如果查询不到那么自动将页码改为上一页。
+				}else {
+					request.setAttribute("page", Integer.valueOf(page));
+				}
+				request.setAttribute("keywords", keywords);
+			}else if("product".equalsIgnoreCase(command)) {
+				keyWordService.getDataFromProduct();
+			}else if("category".equalsIgnoreCase(command)) {
+				keyWordService.getDataFromCategory();
+			}else if("create".equalsIgnoreCase(command)) {
+				keyWordService.createIndex();
+			}
+			
+			return "manager/keyword/addKeyWord";
+		}
+		
+		@RequestMapping(value="showKeyWord.do")
+		public String showKeyWord(HttpServletRequest request,
+				HttpServletResponse response) {
+			int page = Integer.valueOf(request.getParameter("page"));
+			if(page < 1) {
+				page = 1;
+			}
+			List<ShowDocument> keywords = keyWordService.showIndexByPage(page);
+			request.setAttribute("page", page);
+			request.setAttribute("keywords", keywords);
+			return "manager/keyword/showKeyWord";
+		}
+		
+		@RequestMapping(value="deleteKeyWord.do")
+		public String deleteKeyWord(HttpServletRequest request,
+				HttpServletResponse response) {
+			
+			String page = request.getParameter("page");
+			String command = request.getParameter("command");
+			if(page == null || page.length() == 0) {
+				page = "1";
+			}
+			if("show".equalsIgnoreCase(command)) {
+				List<ShowDocument> keywords = keyWordService.showIndexByPage(Integer.valueOf(page));
+				if(keywords == null || keywords.size() == 0) {
+					request.setAttribute("page", Integer.valueOf(page)-1); //如果查询不到那么自动将页码改为上一页。
+				}else {
+					request.setAttribute("page", Integer.valueOf(page));
+				}
+				request.setAttribute("keywords", keywords);
+			}else if("delete".equalsIgnoreCase(command)) {
+				List<Integer> keywordid = new Vector<Integer>();
+				String keywordids[] = null;
+				if(request.getParameterValues("keywordid")!=null) {
+					keywordids = request.getParameterValues("keywordid");
+					for(int i = 0; i < keywordids.length; i++) {
+						keywordid.add(Integer.parseInt(keywordids[i]));
+					}
+				}
+				keyWordService.deleteIndex(keywordid);
+			}else if("deleteAll".equalsIgnoreCase(command)) {
+				keyWordService.deleteAllIndex();
+			}
+			
+			return "manager/keyword/deleteKeyWord";
+		}
+		
+		@RequestMapping(value="updateKeyWord.do")
+		public String updateKeyWord(HttpServletRequest request,
+				HttpServletResponse response) {
+			String page = request.getParameter("page");
+			String command = request.getParameter("command");
+			if(page == null || page.length() == 0) {
+				page = "1";
+			}
+			if("show".equalsIgnoreCase(command)) {
+				List<ShowDocument> keywords = keyWordService.showIndexByPage(Integer.valueOf(page));
+				if(keywords == null || keywords.size() == 0) {
+					request.setAttribute("page", Integer.valueOf(page)-1); //如果查询不到那么自动将页码改为上一页。
+				}else {
+					request.setAttribute("page", Integer.valueOf(page));
+				}
+				request.setAttribute("keywords", keywords);
+			}else if("showChanged".equalsIgnoreCase(command)) {
+				Date startDate = updateLogService.findLastTime(GlobalDef.PRODUCT);
+				Date nowDate = new Date();
+				int pageSize = IndexPath.pageSize;
+				List<Product> products = productService.findByDateCreatedBetween(startDate, nowDate, new PageRequest(Integer.valueOf(page), pageSize));
+				request.setAttribute("products", products);
+			}else if("update".equalsIgnoreCase(command)) {
+				updateIndexLibService.updateKeyWordInfo();
+			}
+			return "manager/keyword/updateKeyWord";
+		}
+		
+		@RequestMapping(value="showProduct.do")
+		public String showProduct(HttpServletRequest request,
+				HttpServletResponse response) {
+			int page = Integer.valueOf(request.getParameter("page"));
+			if(page < 1) {
+				page = 1;
+			}
+			List<ProductInfo> products = productIndexService.showDocument(page);
+			request.setAttribute("page", page);
+			request.setAttribute("products", products);
+			return "manager/product/showProduct";
+		}
+		
+		@RequestMapping(value="addProduct.do")
+		public String addProduct(HttpServletRequest request,
+				HttpServletResponse response) {
+			
+			String id = request.getParameter("id");
+			if(id == null || id.trim().length() == 0) {  
+				return "manager/product/addProduct";
+			}
+			String name = request.getParameter("name");
+			String title = request.getParameter("title");
+			String categoryName = request.getParameter("categoryName");
+			String productBrand = request.getParameter("productBrand");
+			String url = request.getParameter("url");
+			String price = request.getParameter("price");
+			String deposit = request.getParameter("deposit");
+			
+			ProductInfo product = new ProductInfo();
+			product.setId(id);
+			product.setName(name);
+			product.setTitle(title);
+			product.setCategoryName(categoryName);
+			product.setProductBrand(productBrand);
+			product.setUrl(url);
+			if(price != null && price.trim().length() != 0) {
+				product.setPrice(Double.valueOf(price));
+			}
+			if(deposit != null && deposit.trim().length() != 0) {
+				product.setDeposit(Integer.valueOf(deposit));
+			}
+			productIndexService.addDocments(product);
+			return "manager/product/showProduct";
+		}
+		
+		@RequestMapping(value="deleteProduct.do")
+		public String deleteProduct(HttpServletRequest request,
+				HttpServletResponse response) {
+			
+			String page = request.getParameter("page");
+			String command = request.getParameter("command");
+			if(page == null || page.length() == 0) {
+				page = "1";
+			}
+			if("show".equalsIgnoreCase(command)) {
+				List<ProductInfo> products = productIndexService.showDocument(Integer.valueOf(page));
+				if(products == null || products.size() == 0) {
+					request.setAttribute("page", Integer.valueOf(page)-1); //如果查询不到那么自动将页码改为上一页。
+				}else {
+					request.setAttribute("page", Integer.valueOf(page));
+				}
+				request.setAttribute("products", products);
+			}else if("delete".equalsIgnoreCase(command)) {
+				List<ProductInfo> productid = new Vector<ProductInfo>();
+				String productids[] = null;
+				if(request.getParameterValues("productid")!=null) {
+					productids = request.getParameterValues("productid");
+					for(int i = 0; i < productids.length; i++) {
+						ProductInfo productInfo = new ProductInfo();
+						productInfo.setId(productids[i]);
+						productid.add(productInfo);
+					}
+				}
+//				productIndexService.deleteDocuments(productid);
+			}else if("deleteAll".equalsIgnoreCase(command)) {
+				productIndexService.deleteAllDocuments();
+			}
+			
+			return "manager/product/deleteProduct";
+		}
+		
+		@RequestMapping(value="updateProduct.do")
+		public String updateProduct(HttpServletRequest request,
+				HttpServletResponse response) {
+			String page = request.getParameter("page");
+			String command = request.getParameter("command");
+			if(page == null || page.length() == 0) {
+				page = "1";
+			}
+			if("show".equalsIgnoreCase(command)) {
+				List<ProductInfo> products = productIndexService.showDocument(Integer.valueOf(page));
+				if(products == null || products.size() == 0) {
+					request.setAttribute("page", Integer.valueOf(page)-1); //如果查询不到那么自动将页码改为上一页。
+				}else {
+					request.setAttribute("page", Integer.valueOf(page));
+				}
+				request.setAttribute("products", products);
+			}else if("showChanged".equalsIgnoreCase(command)) {
+				Date startDate = updateLogService.findLastTime(GlobalDef.PRODUCT);
+				Date nowDate = new Date();
+				int pageSize = IndexPath.pageSize;
+				List<Product> products = productService.findByDateCreatedBetween(startDate, nowDate, new PageRequest(Integer.valueOf(page), pageSize));
+				request.setAttribute("products", products);
+			}else if("update".equalsIgnoreCase(command)) {
+				updateIndexLibService.updateProductIndex();
+			}else if("init".equalsIgnoreCase(command)) {
+				productIndexService.createIndexFromDB();
+			}
+			return "manager/product/updateProduct";
+		}
+		
+		@RequestMapping(value="callShopIndexMethod.do")
+		public String callShopIndexMethod(HttpServletRequest request,
+				HttpServletResponse response) {
+			
+			String page = request.getParameter("page");
+			String command = request.getParameter("command");
+			if(page == null || page.length() == 0) {
+				page = "1";
+			}
+			if("createIndex".equalsIgnoreCase(command)) {
+				shopIndex.createIndexFromDB();
+			}else if("deleteAll".equalsIgnoreCase(command)) {
+				shopIndex.deleteAllDocuments();
+			}
+			
+			return "manager/shop/callShopIndexMethod";
+		}
+
+}

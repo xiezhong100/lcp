@@ -1,0 +1,9 @@
+keyIndex = D://lucene/keyindex
+productIndex = D://lucene/index
+shopIndex = D://lucene/shopindex
+#keyIndex = /var/lucene/keyindex
+#productIndex = /var/lucene/index
+#shopIndex = /var/lucene/shopindex
+categoryAttrValue = \u54C1\u724C,\u8272\u8C03
+unKeyWords = \u5176\u4ED6
+pageSize = 10

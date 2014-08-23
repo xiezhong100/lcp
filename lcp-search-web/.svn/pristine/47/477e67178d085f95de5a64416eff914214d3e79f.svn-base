@@ -1,0 +1,259 @@
+/*页面总体样式控制*/
+body {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #333333;
+    font: 12px/150% Arial,Verdana,"宋体";
+}
+/*页面总体样式控制结束*/
+/**/
+html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, address, big, cite, code, del, em, font, img, ins, small, strong, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend {
+    margin: 0;
+    padding: 0;
+}
+
+a:link, a:visited {
+    color: #333333;
+    text-decoration: none;
+}
+
+a:hover{
+	color:#8CB98E;
+	text-decoration: underline;
+}
+
+.w {
+    margin: 0 auto;
+    width: 990px;
+}
+.w {
+    width: 1210px;
+}
+
+/*结束*/
+
+/*头部*/
+#header{
+	height:60px;
+	padding-top: 15px;
+	padding-right: 0;
+	padding-bottom: 15px;
+	padding-left: 0;
+}
+#logo{
+	width:350px;
+	float:left;
+	padding-top:15px;
+	height: 40px;
+	text-align: center;
+	font-size: 36px;
+	color: #8CB98E;
+	font-weight: bold;
+}
+#search {
+    padding-right: 96px;
+    width: 510px;
+    float: left;
+    /*padding: 4px 86px 0 0;*/
+}
+
+
+#search .button {
+	background-color: #8CB98E;
+	font-size: 16px;
+	font-weight: bold;
+	position: relative;
+	width: 78px;
+	color: #003399;
+	font-family: Arial, Helvetica, sans-serif;
+
+}
+
+
+
+#search .form {
+	height: 30px;
+	overflow: hidden;
+	padding: 0px;
+	margin: 0px;
+	border: thin solid #7AA02C;
+	width: 500px;
+}
+
+
+#search .text {
+	color: #999999;
+	font-family: arial, "宋体";
+	font-size: 14px;
+	height: 30px;
+	line-height: 30px;
+	width: 422px;
+	text-indent:5px;
+}
+#search input {
+    border: medium none;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+}
+.form input, .form button {
+    float: left;
+    font-size: 12px;
+}
+
+#search .select-search{
+	overflow: hidden;
+}
+
+#search .select-search .selected{
+	background-color: #99CC99;
+	
+}
+
+#search .select-search-name{
+	float: left;
+	width: 60px;
+	font-size: 14px;
+	color: #0000CC;
+	text-align: center;
+	font-style: normal;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+
+#hotwords {
+    color: #999999;
+    height: 18px;
+    overflow: hidden;
+}
+#hotwords span, #hotwords strong {
+    float: left;
+    font-weight: normal;
+}
+#hotwords a:link, #hotwords a:visited {
+    color: #999999;
+    float: left;
+    margin-right: 10px;
+}
+/*头部结束*/
+
+
+/*xiezhong*/
+.cate-leaf section-open alignment alignment-cate .nav clearfix li {
+	font-family: "宋体";
+	font-size: 12px;
+}
+.content {
+	float: none;
+	width: 895px;
+	background-color: #99FFCC;
+	border-top-width: 10px;
+	border-right-width: 10px;
+	border-bottom-width: 10px;
+	border-left-width: 10px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+	background-position: center;
+}
+.content div {
+	float: left;
+	width: 178px;
+	background-color: #FFFFFF;
+	font-family: "宋体";
+	font-size: 14px;
+	font-style: normal;
+	line-height: 20px;
+	color: #CC0033;
+	background-position: center;
+	text-align: center;
+	height: 40px;
+	padding-top: 13px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 1px;
+}
+
+#myend {
+	position:absolute;
+	float: none;
+	width: 420px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #CCCCCC;
+	border-left-color: #CCCCCC;
+	margin: 0px;
+	padding: 0px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	z-index: 10;
+}
+
+.keyword-class div{
+	float: right;
+	width: auto;
+	text-align: right;
+	color: #449944;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	margin: 0px;
+	padding: 0px;
+	border: 0px none #999999;
+	clear: none;
+}
+
+.keyword-class font{
+	float: left;
+	width: auto;
+	text-align: left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	margin: 0px;
+	padding: 0px;
+	border: 0px none #449944;
+	clear: none;
+}
+
+.keyword-class{
+	cursor:pointer;
+	float: right;
+	width: 95%;
+	text-align: left;
+	background-position: center;
+	color: #9999CC;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	margin: 0px;
+	border: 0px none #999999;
+	padding: 9px;
+}
+
+.select-background {
+	background-color:#C5CCCA;
+}
+
+.search-panel {
+position: relative;
+zoom: 1;
+float: left;
+width: 603px;
+}
+user agent stylesheetdiv {
+display: block;
+}
+
+/**/
+/*结束*/
+	

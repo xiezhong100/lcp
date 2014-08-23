@@ -1,0 +1,504 @@
+package lycy.app.lcp.controller;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import lycy.app.lcp.domain.category.Category;
+import lycy.app.lcp.domain.product.Product;
+import lycy.app.lcp.domain.search.KeyWordInfo;
+import lycy.app.lcp.domain.search.ProductInfo;
+import lycy.app.lcp.domain.search.SearchResult;
+import lycy.app.lcp.domain.search.SearchShopResult;
+import lycy.app.lcp.domain.search.ShopInfo;
+import lycy.app.lcp.domain.shop.Shop;
+import lycy.app.lcp.search.service.SearchService;
+import lycy.app.lcp.search.util.IndexPath;
+import lycy.app.lcp.search.util.GlobalDef;
+import lycy.app.lcp.service.search.CategoryService;
+import lycy.app.lcp.service.search.ProductService;
+import lycy.app.lcp.service.shop.ShopService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+@RequestMapping(value = "search/")
+public class SearchController {
+
+	@Autowired
+	private SearchService searchService;
+
+	@Autowired
+	private CategoryService categoryService;
+
+	@Resource
+	private ProductService productService;
+
+	@Resource
+	private ShopService shopService;
+
+	/**
+	 * 根据商品ID获取销售这个商品的店铺的shopid、shopname、userid，按json返回 by DHP
+	 * 
+	 * @Title: getShopInfoByProductId
+	 * @Description: TODO
+	 * @param @param request
+	 * @param @param response
+	 * @param @return
+	 * @return JSONObject 返回类型
+	 * @throws
+	 */
+	@RequestMapping("getShopInfoByProductId.do")
+	public void getShopInfoByProductId(HttpServletRequest request,
+			HttpServletResponse response) {
+		String productId = request.getParameter("productId");
+		Product product = productService.getOne(productId);
+		long shopId = product.getShopId();
+		Shop shop = shopService.getOne(shopId);
+		String shopName = shop.getShopName();
+		long userId = shop.getUserId();
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("to", userId);
+		jsonObject.put("shopid", shopId);
+		jsonObject.put("shopname", shopName);
+		this.sendJSONString(response, jsonObject, null);
+	}
+
+	@RequestMapping(value = "search_show.do")
+	public String search_show(HttpServletRequest request,String keyword) {
+		if (keyword != null) {
+			try {
+				keyword = URLDecoder.decode(keyword, "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		List<ProductInfo> promotionProducts = searchService
+				.queryPromotionProducts(keyword);
+		request.setAttribute("promotionProducts", promotionProducts);
+		request.setAttribute("keyword", keyword);
+		return "search_show";
+	}
+	
+	@RequestMapping(value = "search_category.do")
+	public String search_category(HttpServletRequest request,
+			HttpServletResponse response) {
+		String cid = request.getParameter("cid");
+		String keyword = null;
+		if (cid != null && cid.trim().length() != 0) {// 得到cid对应的类目的类目的名称
+			keyword = categoryService.getOneByCategoryId(Integer.valueOf(cid))
+					.getName();
+		}
+		List<ProductInfo> promotionProducts = searchService
+				.queryPromotionProducts(keyword);
+		request.setAttribute("promotionProducts", promotionProducts);
+		request.setAttribute("keyword", keyword);
+		request.setAttribute("categoryId", cid);
+		return "search_show";
+	}
+
+	@RequestMapping(value = "search_shop.do")
+	public String search_shop(HttpServletRequest request,
+			HttpServletResponse response) {
+		String keyword = null;
+		try {
+			keyword = URLDecoder.decode(request.getParameter("keyword"),
+					"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		String page = request.getParameter("page");
+		if (page == null || page.trim().length() == 0) {
+			page = "1";
+		}
+		SearchShopResult result = searchService.queryShopsByKeyword(keyword,
+				Integer.valueOf(page));
+		Set<String> categorys = searchService.queryAllCategoryByKeyword(
+				keyword, result.getTotal());
+		List<ShopInfo> shops = result.getShops();
+		request.setAttribute("keyword", keyword);
+		request.setAttribute("shops", shops);
+		request.setAttribute("totalNum", result.getTotal());
+		request.setAttribute("totalPage", (result.getTotal()
+				+ IndexPath.pageSize - 1)
+				/ IndexPath.pageSize);
+		request.setAttribute("currPage", result.getCurPage());
+		request.setAttribute("categorys", categorys);
+		request.setAttribute("select_value", GlobalDef.SEARCH_SHOP);
+		return "search_shop";
+	}
+
+	@RequestMapping(value = "search_shop_ajax.do")
+	public void search_shop_ajax(HttpServletRequest request,
+			HttpServletResponse response) {
+		String keyword = request.getParameter("keyword");
+		;
+		String page = request.getParameter("page");
+		String categoryName = request.getParameter("categoryName");
+		String brandName = request.getParameter("brandName");
+		if (page == null || page.trim().length() == 0) {
+			page = "1";
+		}
+		SearchShopResult result = null;
+		List<String> brands = null;
+		if (categoryName == null || categoryName.trim().length() == 0) {// 如果传递过来的类目参数为空，则说明不需要进行条件筛选
+			result = searchService.queryShopsByKeyword(keyword,
+					Integer.valueOf(page));
+		} else {// 如果类目名称不为空，则说明至少需要进行类目的筛选
+			if (brandName == null || brandName.trim().length() == 0) {// 如果品牌为空，说明只是进行类目的筛选
+				result = searchService.queryShopsByKeywordAndCategory(keyword,
+						categoryName, Integer.valueOf(page));
+				Map<String, List<String>> categoryAttrs = searchService
+						.getCategoryAttr(categoryName);
+				brands = categoryAttrs.get("品牌");
+			} else {
+				result = searchService
+						.queryShopsByKeywordAndCategoryAndBrand(keyword,
+								categoryName, brandName, Integer.valueOf(page));
+			}
+		}
+
+		JSONObject results = new JSONObject();
+		List<ShopInfo> shops = result.getShops();
+		results.put("keyword", keyword);
+		results.put("shops", shops);
+		results.put("totalNum", result.getTotal());
+		results.put("totalPage", (result.getTotal() + IndexPath.pageSize - 1)
+				/ IndexPath.pageSize);
+		results.put("currPage", result.getCurPage());
+		results.put("categoryName", categoryName);
+		results.put("brands", brands);
+		this.sendJSONString(response, results, null);
+	}
+
+	@RequestMapping(value = "topTool.do")
+	public String topTool() {
+		return "topTool";
+	}
+
+	@RequestMapping(value = "search.do")
+	public String search() {
+		return "search";
+	}
+
+	@RequestMapping(value = "loadTool.do")
+	public String loadTool() {
+		return "loadTool";
+	}
+
+	@RequestMapping(value = "fullLoaderTool.do")
+	public String fullLoaderTool() {
+		return "fullLoaderTool";
+	}
+
+	@RequestMapping(value = "helpTool.do")
+	public String helpTool() {
+		return "helpTool";
+	}
+
+	@RequestMapping(value = "footTool.do")
+	public String footTool() {
+		return "footTool";
+	}
+
+	@RequestMapping(value = "categoryShow.do")
+	public String categoryShow(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<Category, Map<Category, List<Category>>> categories = new LinkedHashMap<Category, Map<Category, List<Category>>>();
+		List<Category> firstCategories = searchService
+				.getFirstLevelCategories();
+		request.setAttribute("firstCategories", firstCategories);
+		for (int i = 0; i < firstCategories.size(); i++) {
+			Category firstCategory = firstCategories.get(i);
+			int categoryid = firstCategory.getCategoryId();
+			Map<Category, List<Category>> children = searchService
+					.getSecondAndThirdCategories(categoryid);
+			categories.put(firstCategory, children);
+		}
+		request.setAttribute("categories", categories);
+		return "categoryShow_bak2";
+		// return "categoryShow_bak1";
+		// return "categoryShow_bak";
+		// return "categoryShow";
+	}
+
+	/**
+	 * @param ：@param request
+	 * @param ：@param response
+	 * @return : void
+	 * @throws :
+	 * @author ：谢忠
+	 * @Date : 2013-2-20 下午5:44:48
+	 * @Description : TODO 搜索产品信息
+	 */
+	@RequestMapping(value = "searchAllProduct.do")
+	public void searchAllProduct(HttpServletRequest request,
+			HttpServletResponse response) {
+		String page = request.getParameter("page");
+		String keyword = request.getParameter("keyword");
+		String categoryId = request.getParameter("categoryId");
+		String attrString = request.getParameter("attrString");
+		if (keyword == null || keyword.trim().length() == 0) {
+			return;
+		}
+		if (page == null || page.trim().length() == 0) {
+			page = "1";
+		}
+		SearchResult results = null;
+		if (categoryId == null || categoryId.trim().length() == 0) {
+			results = searchService.queryPageProductByKeyWord(keyword,
+					Integer.valueOf(page));
+		} else {
+			results = searchService.queryPageProductByKeyWordAndCategoryId(
+					keyword, Integer.valueOf(page), categoryId,
+					parseAttrString(attrString));
+		}
+		List<ProductInfo> products = results.getProductinfos();
+		JSONObject result = new JSONObject();
+		result.put("keyword", keyword);
+		result.put("attrString", attrString);
+		result.put("totalNum", results.getTotal());
+		result.put("totalPage", (results.getTotal() + IndexPath.pageSize - 1)
+				/ IndexPath.pageSize);
+		result.put("currPage", results.getCurPage());
+		result.put("products", products);
+		// if(results.getTotal() > 2) { //如果搜索出来的结果大于50，那就得进行条件筛选。
+		if (categoryId != null && categoryId.trim().length() != 0) { // 如果已经确定类目
+			Map<String, List<String>> map = searchService
+					.getCategoryAttr(categoryId);// 得到这个类目的所有属性以及属性值
+			if (attrString != null && attrString.trim().length() != 0) {
+				String[] exsitAttrs = attrString.split(" "); // 得到已经选择了的属性
+				for (int i = 0; i < exsitAttrs.length; i++) {
+					String exsitKey = exsitAttrs[i].split(":")[0];
+					map.remove(exsitKey);
+				}
+			}
+			Set<String> keys = map.keySet();
+			Category category = categoryService.getOneByCategoryId(Integer.valueOf(categoryId));
+			Category pCategory = categoryService.getOneByCategoryId(category.getParentId());
+			result.put("categoryName", pCategory.getName() + ">" + category.getName());
+			result.put("categoryId", categoryId);
+			result.put("keys", keys);
+			result.put("map", map);
+		} else { // 如果还没有确定类目，那就得查看该关键字是否对应一个类目或者多个类目
+			Set<String> categoryIds = searchService.getAllCategoryId(
+					keyword, results.getTotal());
+			if (categoryIds.size() == 1) {// 如果搜索的结果的类目只有一种，那就直接找出该类目的属性以及属性值
+				String onecategoryId = categoryIds.iterator().next();
+				Map<String, List<String>> map = searchService
+						.getCategoryAttr(onecategoryId);// 得到这个类目的所有属性以及属性值
+				Set<String> keys = map.keySet();
+				Category category2 = categoryService.getOneByCategoryId(Integer.valueOf(onecategoryId));
+				Category pCategory = categoryService.getOneByCategoryId(category2.getParentId());
+				String categoryName = pCategory.getName() + ">" + category2.getName();
+				result.put("categoryName", categoryName);
+				result.put("categoryId", onecategoryId);
+				result.put("keys", keys);
+				result.put("map", map);
+			} else {
+				result.put("categoryId", categoryId);
+				List<Category> categoryNames = new ArrayList<Category>();
+				for (String onecategoryId:categoryIds) {
+					Category category2 = categoryService.getOneByCategoryId(Integer.valueOf(onecategoryId));
+					Category pCategory = categoryService.getOneByCategoryId(category2.getParentId());
+					String categoryName = pCategory.getName() + ">" + category2.getName();
+					category2.setName(categoryName);
+					categoryNames.add(category2);
+				}
+				result.put("category", categoryNames);// 如果搜索到的结果里面有超过不止一个类目，那么就把所有类目显示出来供用户选择哪个类目
+			}
+		}
+		// }
+		this.sendJSONString(response, result, null);
+	}
+
+	@RequestMapping(value = "searchProduct.do")
+	public String searchProduct(HttpServletRequest request,
+			HttpServletResponse response) {
+		String page = request.getParameter("page");
+		String keyword = request.getParameter("keyword");
+		if (keyword == null || keyword.trim().length() == 0) {
+			return "index";
+		}
+		if (page == null || page.trim().length() == 0) {
+			page = "1";
+		}
+		SearchResult results = searchService.queryPageProductByKeyWord(keyword,
+				Integer.valueOf(page));
+		List<ProductInfo> products = results.getProductinfos();
+		request.setAttribute("keyword", keyword);
+		request.setAttribute("totalNum", results.getTotal());// 总记录数
+		request.setAttribute("totalPage", (results.getTotal()
+				+ IndexPath.pageSize - 1)
+				/ IndexPath.pageSize);// 总记录数
+		request.setAttribute("currPage", results.getCurPage());
+		request.setAttribute("products", products);
+		return "index";
+	}
+
+	/**
+	 * @Title: showKeyWord
+	 * @Description: TODO 提示关键字
+	 * @param @param request
+	 * @param @param response
+	 * @return void 返回类型
+	 * @author 谢忠
+	 * @time 2013-3-6 上午9:39:01
+	 * @throws
+	 */
+	@RequestMapping(value = "showKeyWord.do")
+	public void showKeyWord(HttpServletRequest request,
+			HttpServletResponse response) {
+		String preKeyWord = request.getParameter("preKeyWord");
+		String areaName = request.getParameter("areaName");
+		int area = 0;
+		if (preKeyWord == null || preKeyWord.trim().length() == 0) {
+			return;
+		}
+		if (areaName == null || areaName.trim().length() == 0) {
+			area = GlobalDef.SEARCH_PRODUCT_VALUE;
+		}else {
+			if(GlobalDef.SEARCH_SHOP.equals(areaName)){
+				area = GlobalDef.SEARCH_SHOP_VALUE;
+			}else if (GlobalDef.SEARCH_PRODUCT.equals(areaName)) {
+				area = GlobalDef.SEARCH_PRODUCT_VALUE;
+			}
+		}
+		List<KeyWordInfo> keywords = new ArrayList<KeyWordInfo>();
+		try {
+			keywords = searchService.queryKeywords(preKeyWord,area);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		JSONArray productsJson = new JSONArray();
+		for (Iterator<KeyWordInfo> it = keywords.iterator(); it.hasNext();) {
+			JSONObject obj = new JSONObject();
+			KeyWordInfo keyword = it.next();
+			obj.put("keyword", keyword.getWord());
+			obj.put("totalNum", keyword.getTotalNum());
+			productsJson.add(obj);
+		}
+		this.sendJsonArray(response, productsJson, null);
+	}
+
+	@RequestMapping(value = "orderProduct.do")
+	public void orderProduct(HttpServletRequest request,
+			HttpServletResponse response) {
+		String page = request.getParameter("page");
+		String keyword = request.getParameter("keyword");
+		String orderName = request.getParameter("ordername");
+		String up = request.getParameter("up");
+		String categoryId = request.getParameter("categoryId");
+		String attrString = request.getParameter("attrString");
+		boolean order = true;
+		if ("true".equalsIgnoreCase(up)) {
+			order = false;
+		}
+		if (page == null || page.trim().length() == 0) {
+			page = "1";
+		}
+		SearchResult results = new SearchResult();
+		if ("相关度".equalsIgnoreCase(orderName)) {
+			if (categoryId != null && categoryId.trim().length() != 0) {
+				results = searchService
+						.queryPageProductByKeyWordAndCategoryId(keyword,
+								Integer.valueOf(page), categoryId,
+								parseAttrString(attrString));
+			} else {
+				results = searchService.queryPageProductByKeyWord(keyword,
+						Integer.valueOf(page));
+			}
+		} else if ("销量".equalsIgnoreCase(orderName)) {
+			results = searchService.queryProductOrderBySale(keyword,
+					Integer.valueOf(page), order, categoryId,
+					parseAttrString(attrString));
+		} else if ("价格".equalsIgnoreCase(orderName)) {
+			results = searchService.queryProductOrderByPrice(keyword,
+					Integer.valueOf(page), order, categoryId,
+					parseAttrString(attrString));
+		} else if ("上架时间".equalsIgnoreCase(orderName)) {
+			results = searchService.queryProductOrderByCreateDate(keyword,
+					Integer.valueOf(page), order, categoryId,
+					parseAttrString(attrString));
+		} else if ("评论数".equalsIgnoreCase(orderName)) {
+			results = searchService.queryProductOrderByCommentCount(keyword,
+					Integer.valueOf(page), order, categoryId,
+					parseAttrString(attrString));
+		}
+		List<ProductInfo> products = results.getProductinfos();
+		JSONObject result = new JSONObject();
+		result.put("totalNum", results.getTotal());
+		result.put("totalPage", (results.getTotal() + IndexPath.pageSize - 1)
+				/ IndexPath.pageSize);
+		result.put("currPage", results.getCurPage());
+		result.put("products", products);
+		this.sendJSONString(response, result, null);
+	}
+
+	public static String parseAttrString(String attrString) {
+		StringBuffer stringBuffer = new StringBuffer();
+		if (attrString == null || attrString.trim().length() == 0) {
+			return null;
+		} else {
+			String[] attrs = attrString.split(" ");
+			for (int i = 0; i < attrs.length; i++) {
+				if (attrs[i].trim().length() != 0
+						&& attrs[i].split(":").length == 2) {
+					stringBuffer.append(attrs[i].split(":")[1]);
+				}
+			}
+			return stringBuffer.toString();
+		}
+	}
+
+	public void sendJSONString(HttpServletResponse resp, JSONObject json,
+			String contentType) {
+		try {
+			if (contentType == null)
+				contentType = "text/html";
+			resp.setContentType(contentType);
+			resp.getWriter().write(json.toString());
+			System.out.println(json.toString());
+			resp.getWriter().flush();
+			resp.flushBuffer();
+			resp.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception ex) {
+		}
+	}
+
+	/**
+	 * 输出JSONArray字符串数组
+	 * 
+	 * @param resp
+	 * @param jsonArray
+	 * @param contentType
+	 * @throws Exception
+	 */
+	public void sendJsonArray(HttpServletResponse resp, JSONArray jsonArray,
+			String contentType) {
+		try {
+			if (contentType == null)
+				contentType = "text/html";
+			resp.setContentType(contentType);
+			resp.getWriter().write(jsonArray.toString());
+			resp.getWriter().flush();
+			resp.flushBuffer();
+			resp.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception ex) {
+		}
+	}
+}

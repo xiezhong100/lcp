@@ -1,0 +1,68 @@
+#startPlace {
+	width: 225px;
+	background-color: #8CB91E;
+	text-align: center;
+	font-family: "新宋体";
+	font-size: 14px;
+	line-height: 35px;
+	font-weight: bold;
+	color: #FFFFFF;
+	float: left;
+	position: relative;
+	left: 0px;
+
+}
+
+body {
+font: 14px/150% Arial, Verdana, "宋体b8b\4f53";
+color: #666;
+}
+
+a:link, a:visited {
+color: #666;
+text-decoration: none;
+}
+
+#nav {
+	position:absolute;
+	background-color: #8CB91E;
+	width: 1210px;
+}
+
+#nav #navitems li {
+	display: block;
+	height: 30px;
+	width: 100px;
+	text-align: center;
+	vertical-align: middle;
+	float: left;
+	list-style-type:none;
+	background-color: #8CB91E;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-left-color: #999999;
+	background-position: center;
+	padding-top: 5px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+
+#nav #navitems li a {
+	font-size: 14px;
+	color: #FFFFFF;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#nav #navitems #empty-div {
+	width: 364px;
+	background-color: #8CB910;
+
+}

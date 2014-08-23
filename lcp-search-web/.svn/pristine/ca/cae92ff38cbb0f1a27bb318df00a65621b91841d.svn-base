@@ -1,0 +1,68 @@
+body{font-size:12px;font-family:"微软雅黑", Verdana, Geneva, sans-serif, "宋体";}
+dl, dt, dd, ul, li, p, h5{padding:0;margin:0;}
+
+.productShowByCategory{width:1010px;margin:0 0;height:400px;margin-left:3px;}
+.productShowByCategory h2{font-size:16px;text-align:center;}
+.productShowByCategory h5{font-size:13px;}
+/* switchBox */
+.switchBox{border:1px solid #dddddd;width:1015px;height:398px;}
+.switchBox dt{
+	height:30px;
+}
+.switchBox dt a{
+	background-color:#CCCCCC;
+	cursor:pointer;
+	float:left;
+	font-size:14px;
+	height:30px;
+	line-height:30px;
+	text-align:center;
+	text-decoration:none;
+	width:203px;
+	font-style:normal;
+	font-weight: bold;
+}
+.switchBox dt .on{
+	background: url("../images/navbar-select-bg.gif") repeat scroll 0 0 transparent;
+	color:#FFFFFF;
+}
+.switchBox dt .active{background-color:#ffffcc;font-weight:bolder;}
+.switchBox dt .on, .switchBox dt .active, .switchBox a:hover{
+}
+.switchBox dt .fat{color:#0000ff;width:150px;}
+.switchBox dt .fat:hover{color:#ffff00;}
+.switchBox dd{clear:both;display:none;height:370px;min-height:100px!important;padding:0px;font-family:"宋体";}
+.switchBox li{
+	margin-left:20px;
+	float: left;
+	height: 155px;
+	width: 180px;
+	text-align: center;
+	list-style-type: none;
+	margin-top: 20px;
+}
+
+.switchBox li a {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	color: #333333;
+}
+.switchBox li .p-picture {
+	height: 100px;
+	width: 100px;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.switchBox li .p-name {
+	height: 35px;
+	width: 180px;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.switchBox li .p-price {
+	height: 20px;
+	width: 180px;
+}

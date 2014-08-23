@@ -1,0 +1,122 @@
+#site-nav {
+background-color: whiteSmoke;
+width: auto;
+min-width: 1210px;
+border-bottom: 1px solid gainsboro;
+}
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td {
+margin: 0;
+padding: 0;
+}
+user agent stylesheetdiv {
+display: block;
+}
+body, button, input, select, textarea {
+font: 12px/1.5 tahoma,arial,宋体b8b\4f53;
+}
+.wRange4 #page, .wRange4 #site-nav-bd {
+width: 1450px;
+}
+#site-nav-bd {
+width: auto;
+min-width: 1210px;
+max-width: 1400px;
+margin: 0 auto;
+padding-left: 3.75%;
+padding-right: 3.75%;
+}
+#site-nav-bd {
+position: relative;
+width: 1210px;
+margin: 0 auto;
+height: 21px;
+line-height: 22px;
+padding: 3px 0;
+z-index: 10000;
+color: black;
+}
+
+
+/*登陆部分开始*/
+#site-nav .login-info {
+float: left;
+}
+#site-nav p {
+	display: block;
+
+-webkit-margin-before: 1em;
+-webkit-margin-after: 1em;
+-webkit-margin-start: 0px;
+-webkit-margin-end: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+#site-nav .login-info a {
+margin-right: 8px;
+}
+#site-nav a {
+	color: #666;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+a {
+text-decoration: none;
+}
+a {
+color: #0063DC;
+text-decoration: none;
+cursor: pointer;
+}
+div {
+display: block;
+}
+
+/*登陆部分结束*/
+
+
+/*右边ul部分开始*/
+#site-nav .quick-menu {
+right: 3.75%;
+}
+#site-nav .quick-menu {
+position: absolute;
+right: 0;
+top: 1px;
+}
+ul, ol {
+list-style: none;
+}
+#site-nav .quick-menu li {
+	float: left;
+	margin-left: 5px;
+	background-position: right 6px;
+	padding-top: 1px;
+	padding-right: 10px;
+	padding-bottom: 0;
+	padding-left: 10px;
+}
+
+/*买家中心开始*/
+#site-nav .quick-menu li.menu-item {
+position: relative;
+padding: 1px 0 0;
+}
+
+#site-nav .menu-bd {
+display: none;
+position: absolute;
+right: 0;
+top: 20px;
+top: 21px	9;
+background: white;
+border: 1px solid #BFBFBF;
+z-index: 10001;
+}
+
+#site-nav .mytaobao .menu-bd-panel, #site-nav .favorite .menu-bd-panel, #site-nav .seller-center .menu-bd-panel {
+padding: 8px 10px;
+}
+/*买家中心结束*/
+
+
+/*右边ul部分结束*/

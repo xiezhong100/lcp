@@ -1,0 +1,70 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="ctx" value="<%=request.getContextPath()%>"></c:set>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>林产品店铺搜索页面</title>
+<link href="${ctx}/css/search_shop.css" rel="stylesheet" type="text/css" />
+<script src="${ctx}/js/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="${ctx}/js/search_shop.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<body>
+	<!--回到顶部-->
+	<div id="toppanel" class="toppanel">
+		<div id="sidepanel" class="hide"
+			style="right: 200.5px; display: block;">
+			<a class="gotop" title="使用快捷键t也可返回顶部哦！" href="#"> <b> </b> 返回顶部
+			</a>
+		</div>
+	</div>
+	<!--回到顶部结束-->
+	<!--顶部标签栏-->
+	<%@ include file="topTool.jsp"%>
+	<!--顶部标签栏结束-->
+
+	<!--头部-->
+	<div id="o-header">
+		<!--搜索区-->
+		<div id="header" class="w">
+			<%@ include file="search.jsp"%>
+		</div>
+		<!--搜索区结束-->
+		<!--导航栏-->
+
+		<!--导航栏结束-->
+	</div>
+	<!--头部结束-->
+	<!--主题-->
+	<div id="main">
+		<div id = "loader_all" class="w">
+			<%@ include file="loadTool.jsp"%>
+		</div>
+		<!--展示区-->
+		<div id="show_info">通过关键字<span style="color: red;  padding-left: 5px; padding-right: 5px; font-weight: bold; ">${keyword }</span>搜索到的店铺显示如下：</div>
+		<div class="show_shop">
+			<c:forEach var="shop" items="${shops }">
+			<li class="one_shop">
+				<div class="shop-logo">
+					<a title="${shop.logoPic }" target="_blank"
+						href=""><img width="200" height="200"
+						data-img="1" alt="${shop.shopName }"
+						src="${shop.logoPic }" class="err-product"></a>
+				</div>
+				<div class="shop-name">
+					<a title="${shop.shopName }" target="_blank"
+						href="">${shop.shopName }</a>
+				</div>
+				<div class="shop-address">￥${shop.address}</div>
+			</li>
+		</c:forEach>
+		</div>
+	</div>
+	<!--热销与最近浏览结束-->
+	<%@ include file="helpTool.jsp"%>
+	<%@ include file="footTool.jsp"%>
+</body>
+</html>

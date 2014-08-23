@@ -1,0 +1,188 @@
+package lycy.app.lcp.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import lycy.app.lcp.domain.category.Category;
+import lycy.app.lcp.domain.category.IndexCategory;
+import lycy.app.lcp.domain.product.IndexProduct;
+import lycy.app.lcp.domain.search.IndexRules;
+import lycy.app.lcp.search.service.SearchService;
+import lycy.app.lcp.service.search.CategoryService;
+import lycy.app.lcp.service.search.IndexCategoryService;
+import lycy.app.lcp.service.search.IndexProductService;
+import lycy.app.lcp.service.search.IndexRulesService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @Title: TODO  
+ * @Description: TODO  
+ * @author: 谢忠
+ * @date: 2013-5-29 上午8:45:02  
+ *  
+ */
+@Controller
+@RequestMapping(value="/")
+public class IndexController {
+	
+	@Autowired
+	private IndexProductService indexProductService;
+	
+	@Autowired
+	private IndexRulesService indexRulesService;
+	
+	@Autowired
+	private IndexCategoryService indexCategoryService;
+	
+	@Autowired
+	private CategoryService categoryService;
+	
+	@Autowired
+	private SearchService searchService;
+	
+	@RequestMapping(value="index.do")
+	public String index(HttpServletRequest request,
+			HttpServletResponse response) {
+		List<IndexCategory> firstFloorCategories = indexCategoryService.getCategoriesByFloor(1,"index");//得到第一层的所有类目
+		List<IndexCategory> secondFloorCategories = indexCategoryService.getCategoriesByFloor(2,"index");//得到第二层的所有类目
+		
+		List<IndexProduct> topFloorProducts = indexProductService.getAllByFloor(-1,"index");//得到顶层的所有产品
+		List<IndexProduct> bottomFloorProducts = indexProductService.getAllByFloor(0,"index");//得到下层的所有产品
+		List<IndexProduct> firstFloorProducts = indexProductService.getAllByFloor(1,"index");//得到第一层的所有产品
+		List<IndexProduct> secondFloorProducts = indexProductService.getAllByFloor(2,"index");//得到第二层的所有产品
+		
+		List<IndexRules> rules = indexRulesService.findByRuleType("规则","index");
+		List<IndexRules> announcements = indexRulesService.findByRuleType("公告","index");
+		List<IndexRules> forums = indexRulesService.findByRuleType("论坛","index");
+		
+		request.setAttribute("firstFloorCategories", firstFloorCategories);
+		request.setAttribute("secondFloorCategories", secondFloorCategories);
+		request.setAttribute("topFloorProducts", topFloorProducts);
+		request.setAttribute("bottomFloorProducts", bottomFloorProducts);
+		request.setAttribute("firstFloorProducts", getResultIndexProducts(firstFloorProducts));
+		request.setAttribute("secondFloorProducts", getResultIndexProducts(secondFloorProducts));
+		
+		request.setAttribute("rules", rules);
+		request.setAttribute("announcements", announcements);
+		request.setAttribute("forums", forums);
+		return "index";
+	}
+	
+	@RequestMapping(value="firstLevelCategory.do")
+	public String firstLevelCategory(HttpServletRequest request,
+			HttpServletResponse response) {
+		String categoryidString = request.getParameter("cid");
+		int categoryid = 0;
+		if(categoryidString == null || categoryidString.trim().length() == 0) {
+			return null;
+		}else {
+			categoryid = Integer.valueOf(categoryidString);
+		}
+		
+		List<IndexCategory> firstFloorCategories = indexCategoryService.getCategoriesByFloor(1,"index");//得到第一层的所有类目
+		List<IndexCategory> secondFloorCategories = indexCategoryService.getCategoriesByFloor(2,"index");//得到第二层的所有类目
+		
+		List<IndexProduct> topFloorProducts = indexProductService.getAllByFloor(-1,"index");//得到顶层的所有产品
+		List<IndexProduct> bottomFloorProducts = indexProductService.getAllByFloor(0,"index");//得到下层的所有产品
+		List<IndexProduct> firstFloorProducts = indexProductService.getAllByFloor(1,"index");//得到第一层的所有产品
+		List<IndexProduct> secondFloorProducts = indexProductService.getAllByFloor(2,"index");//得到第二层的所有产品
+		
+		List<IndexRules> rules = indexRulesService.findByRuleType("规则","index");
+		List<IndexRules> announcements = indexRulesService.findByRuleType("公告","index");
+		List<IndexRules> forums = indexRulesService.findByRuleType("论坛","index");
+		
+		request.setAttribute("firstFloorCategories", firstFloorCategories);
+		request.setAttribute("secondFloorCategories", secondFloorCategories);
+		request.setAttribute("topFloorProducts", topFloorProducts);
+		request.setAttribute("bottomFloorProducts", bottomFloorProducts);
+		request.setAttribute("firstFloorProducts", getResultIndexProducts(firstFloorProducts));
+		request.setAttribute("secondFloorProducts", getResultIndexProducts(secondFloorProducts));
+		
+		request.setAttribute("rules", rules);
+		request.setAttribute("announcements", announcements);
+		request.setAttribute("forums", forums);
+		
+		Category category = categoryService.getOneByCategoryId(categoryid);
+		Map<Category, List<Category>> categorys = searchService.getSecondAndThirdCategories(categoryid);
+		request.setAttribute("categorys", categorys);
+		request.setAttribute("category", category);
+		
+		return "firstLevelCategory";
+	}
+	
+	@RequestMapping(value="secondLevelCategory.do")
+	public String secondLevelCategory(HttpServletRequest request,
+			HttpServletResponse response) {
+		String categoryidString = request.getParameter("cid");
+		int categoryid = 0;
+		if(categoryidString == null || categoryidString.trim().length() == 0) {
+			return null;
+		}else {
+			categoryid = Integer.valueOf(categoryidString);
+		}
+		
+		List<IndexCategory> firstFloorCategories = indexCategoryService.getCategoriesByFloor(1,"index");//得到第一层的所有类目
+		List<IndexCategory> secondFloorCategories = indexCategoryService.getCategoriesByFloor(2,"index");//得到第二层的所有类目
+		
+		List<IndexProduct> topFloorProducts = indexProductService.getAllByFloor(-1,"index");//得到顶层的所有产品
+		List<IndexProduct> bottomFloorProducts = indexProductService.getAllByFloor(0,"index");//得到下层的所有产品
+		List<IndexProduct> firstFloorProducts = indexProductService.getAllByFloor(1,"index");//得到第一层的所有产品
+		List<IndexProduct> secondFloorProducts = indexProductService.getAllByFloor(2,"index");//得到第二层的所有产品
+		
+		List<IndexRules> rules = indexRulesService.findByRuleType("规则","index");
+		List<IndexRules> announcements = indexRulesService.findByRuleType("公告","index");
+		List<IndexRules> forums = indexRulesService.findByRuleType("论坛","index");
+		
+		request.setAttribute("firstFloorCategories", firstFloorCategories);
+		request.setAttribute("secondFloorCategories", secondFloorCategories);
+		request.setAttribute("topFloorProducts", topFloorProducts);
+		request.setAttribute("bottomFloorProducts", bottomFloorProducts);
+		request.setAttribute("firstFloorProducts", getResultIndexProducts(firstFloorProducts));
+		request.setAttribute("secondFloorProducts", getResultIndexProducts(secondFloorProducts));
+		
+		request.setAttribute("rules", rules);
+		request.setAttribute("announcements", announcements);
+		request.setAttribute("forums", forums);
+		
+		List<Category> treeCategorys = new ArrayList<Category>();
+		Category category = categoryService.getOneByCategoryId(categoryid);
+		if(category.getParentId() != -1) {
+			Category parentCategory = categoryService.getOneByCategoryId(category.getParentId());//得到父节点
+			treeCategorys.add(parentCategory);
+		}
+		treeCategorys.add(category);
+		
+		List<Category> categorys = searchService.getChildrenByCid(categoryid);
+		request.setAttribute("categorys", categorys);
+		request.setAttribute("treeCategorys", treeCategorys);
+		
+		return "secondLevelCategory";
+	}
+	
+	public Map<String, List<IndexProduct>> getResultIndexProducts(List<IndexProduct> products) {
+		Map<String, List<IndexProduct>> resultsMap = new HashMap<String, List<IndexProduct>>();
+		for (Iterator<IndexProduct> iterator = products.iterator(); iterator.hasNext();) {
+			IndexProduct indexProduct = (IndexProduct) iterator.next();
+			String categoryName = indexProduct.getDescription();
+			if (resultsMap.containsKey(categoryName)) {
+				resultsMap.get(categoryName).add(indexProduct);
+			}else {
+				List<IndexProduct> result = new ArrayList<IndexProduct>();
+				result.add(indexProduct);
+				resultsMap.put(categoryName, result);
+			}
+		}
+		
+		return resultsMap;
+	}
+
+}

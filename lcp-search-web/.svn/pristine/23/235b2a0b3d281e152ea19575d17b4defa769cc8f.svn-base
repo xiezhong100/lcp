@@ -1,0 +1,31 @@
+function showCategory() {
+	$("#_JD_ALLSORT").show();
+}
+
+function hideCategory() {
+	$("#_JD_ALLSORT").hide();
+}
+
+function showChildren(currSpan) {
+	currSpan.parent().css("background-color","#C1E0B8");
+	currSpan.parent().children(".sencondDiv").removeClass("i-mc-bak");
+	currSpan.parent().children(".sencondDiv").addClass("i-mc");
+}
+
+function hideChildren(currSpan) {
+	currSpan.parent().css("background-color","#8CB98E");
+	currSpan.parent().children(".sencondDiv").removeClass("i-mc");
+	currSpan.parent().children(".sencondDiv").addClass("i-mc-bak");
+}
+
+function showSelf(currSpan) {
+	currSpan.parent().css("background-color","#C1E0B8");
+	currSpan.removeClass("i-mc-bak");
+	currSpan.addClass("i-mc");
+}
+
+function hideSelf(currSpan) {
+	currSpan.parent().css("background-color","#8CB98E");
+	currSpan.removeClass("i-mc");
+	currSpan.addClass("i-mc-bak");
+}
